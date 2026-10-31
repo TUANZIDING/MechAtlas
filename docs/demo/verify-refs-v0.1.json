@@ -1,0 +1,93 @@
+{
+ "summary": {
+  "checked": 9,
+  "status": {
+   "OK": 9
+  },
+  "date": "2026-11-01",
+  "input": "examples/demo/registry-demo-v0.1.json"
+ },
+ "items": [
+  {
+   "id": "P28186708",
+   "pmid": "28186708",
+   "doi": "10.1002/sctm.16-0363",
+   "status": "OK",
+   "resolved_title": "Mesenchymal Stem Cell-Derived Extracellular Vesicles as Mediators of Anti-Inflammatory Effects: Endorsement of Macrophage Polarization.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P32754983",
+   "pmid": "32754983",
+   "doi": "10.15252/embr.202050863",
+   "status": "OK",
+   "resolved_title": "HDAC inhibitors tune miRNAs in extracellular vesicles of dystrophic muscle-resident mesenchymal cells.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P33316945",
+   "pmid": "33316945",
+   "doi": "10.3390/ph13120450",
+   "status": "OK",
+   "resolved_title": "Stem Cell-Derived Exosomes Ameliorate Doxorubicin-Induced Muscle Toxicity through Counteracting Pyroptosis.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P33323007",
+   "pmid": "33323007",
+   "doi": "10.1089/scd.2020.0167",
+   "status": "OK",
+   "resolved_title": "Bone Marrow Stromal Cell-Derived Exosomes Promote Muscle Healing Following Contusion Through Macrophage Polarization.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P37964317",
+   "pmid": "37964317",
+   "doi": "10.1186/s13287-023-03530-1",
+   "status": "OK",
+   "resolved_title": "Extracellular vesicles derived from human ESC-MSCs target macrophage and promote anti-inflammation process, angiogenesis, and functional recovery in ACS-induced severe skeletal muscle injury.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P38442155",
+   "pmid": "38442155",
+   "doi": "10.1073/pnas.2316544121",
+   "status": "OK",
+   "resolved_title": "Reciprocal communication between FAPs and muscle cells via distinct extracellular vesicle miRNAs in muscle regeneration.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P40835994",
+   "pmid": "40835994",
+   "doi": "10.1038/s41598-025-15699-x",
+   "status": "OK",
+   "resolved_title": "Irradiation of muscle precursor cells impairs the proliferative and angiogenic functions of their extracellular vesicles.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P41936013",
+   "pmid": "41936013",
+   "doi": "10.1007/s13770-026-00795-4",
+   "status": "OK",
+   "resolved_title": "Regenerative effects of myogenic gene transfected MSC derived exosomes on radiation esophagitis.",
+   "similarity": 1.0,
+   "note": ""
+  },
+  {
+   "id": "P42823972",
+   "pmid": "42823972",
+   "doi": "10.1016/j.omtn.2026.103087",
+   "status": "OK",
+   "resolved_title": "Myogenic differentiation-derived small extracellular vesicles as a therapeutic strategy for miR-193b-3p-mediated muscle regeneration.",
+   "similarity": 1.0,
+   "note": ""
+  }
+ ]
+}

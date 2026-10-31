@@ -1,0 +1,3 @@
+# MechAtlas Python dependencies (scripts use the standard library for HTTP: urllib)
+# YAML topic configs need PyYAML; JSON configs work without it.
+pyyaml>=6.0

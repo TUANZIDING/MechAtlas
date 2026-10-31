@@ -1,0 +1,16 @@
+# 订阅数据库原始导出（WoS / Scopus / Embase / CNKI / 万方）不得入库：Clarivate、Elsevier、CNKI 条款
+# Raw exports from subscription databases must never be committed; publish IDs + screening judgments only.
+inputs/
+*.ciw
+savedrecs*.txt
+scopus*.csv
+!tests/fixtures/*
+# 运行目录（API 取回的题录、摘要）默认不入库；发布时只挑选标识符与判定
+runs/
+.env
+__pycache__/
+*.pyc
+node_modules/
+package-lock.json
+.DS_Store
+*-tmp.*

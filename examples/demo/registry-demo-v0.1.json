@@ -1,0 +1,1172 @@
+{
+ "schema": "mechatlas-registry-v0.1",
+ "version": "demo-v0.1",
+ "generated": "2026-11-01",
+ "title": {
+  "zh": "MechAtlas 演示 · EV 干预骨骼肌损伤（节选）",
+  "en": "MechAtlas demo · EV intervention in skeletal muscle injury (subset)"
+ },
+ "subtitle": {
+  "zh": "节选自 EV 干预通路图 v0.2 的 13 条证据关系、9 篇真实文献",
+  "en": "13 relations and 9 real papers excerpted from the EV intervention map v0.2"
+ },
+ "topic": "ev-intervention",
+ "focusNode": null,
+ "grades": {
+  "A": {
+   "zh": "A 辐射模型",
+   "en": "A radiation model",
+   "definition": {
+    "zh": "辐射损伤肌肉/肌源细胞中的 EV 干预直接证据",
+    "en": "EV intervention measured directly in an irradiated muscle/muscle-cell model"
+   }
+  },
+  "B": {
+   "zh": "B 其他损伤参照",
+   "en": "B other-injury ref",
+   "definition": {
+    "zh": "非辐射损伤模型中的在体 EV 干预参照",
+    "en": "In vivo EV intervention in a non-radiation injury model"
+   }
+  },
+  "C": {
+   "zh": "C 体外/候选",
+   "en": "C in vitro / candidate",
+   "definition": {
+    "zh": "仅体外、摘要级或候选（含生物信息学预测）",
+    "en": "In vitro only, abstract-level or candidate (incl. in-silico prediction)"
+   }
+  }
+ },
+ "cols": [
+  {
+   "zh": "EV来源",
+   "en": "EV source"
+  },
+  {
+   "zh": "货物",
+   "en": "Cargo"
+  },
+  {
+   "zh": "靶点/信号",
+   "en": "Target / signal"
+  },
+  {
+   "zh": "细胞过程",
+   "en": "Cell process"
+  },
+  {
+   "zh": "组织结局",
+   "en": "Tissue outcome"
+  },
+  {
+   "zh": "功能结局",
+   "en": "Functional outcome"
+  }
+ ],
+ "rows": 12.293,
+ "lanes": [
+  {
+   "id": "rad",
+   "zh": "辐射模型（A级）",
+   "en": "Radiation models (A)",
+   "color": "#d1475c",
+   "r0": -0.43,
+   "r1": 3.993
+  },
+  {
+   "id": "musc",
+   "zh": "MuSC · M2巨噬细胞",
+   "en": "MuSC · M2 macrophage",
+   "color": "#2a8fb0",
+   "r0": 4.02,
+   "r1": 6.543
+  },
+  {
+   "id": "fibro",
+   "zh": "FAP-EV · miR-206",
+   "en": "FAP-EV · miR-206",
+   "color": "#b07d2a",
+   "r0": 6.57,
+   "r1": 8.143
+  },
+  {
+   "id": "death",
+   "zh": "细胞死亡 · 焦亡",
+   "en": "Cell death · pyroptosis",
+   "color": "#7a52c9",
+   "r0": 8.17,
+   "r1": 10.693
+  },
+  {
+   "id": "gap",
+   "zh": "研究缺口",
+   "en": "Gaps",
+   "color": "#8a97a8",
+   "r0": 10.72,
+   "r1": 12.293
+  }
+ ],
+ "nodes": [
+  {
+   "id": "mpcEV",
+   "type": "ev-source",
+   "status": "evidence",
+   "label": {
+    "zh": "非照射 MPC-EV",
+    "en": "Non-irradiated MPC-EV"
+   },
+   "sub": {
+    "zh": "大鼠肌前体细胞",
+    "en": "rat muscle precursor"
+   },
+   "c": 0,
+   "r": 0
+  },
+  {
+   "id": "radMPC",
+   "type": "cell-process",
+   "status": "evidence",
+   "label": {
+    "zh": "受照MPC活力/增殖 ↑",
+    "en": "Irradiated MPC viability/proliferation ↑"
+   },
+   "sub": {
+    "zh": "10 Gy X线",
+    "en": "10 Gy X-ray"
+   },
+   "c": 3,
+   "r": 0
+  },
+  {
+   "id": "radEndo",
+   "type": "cell-process",
+   "status": "evidence",
+   "label": {
+    "zh": "内皮成管/微血管密度 ↑",
+    "en": "Endothelial tube / microvessel density ↑"
+   },
+   "sub": {
+    "zh": "HUVEC体外",
+    "en": "HUVEC in vitro"
+   },
+   "c": 4,
+   "r": 0.95
+  },
+  {
+   "id": "radEVsrc",
+   "type": "ev-source",
+   "status": "evidence",
+   "label": {
+    "zh": "受照MPC-EV（Rad-EV）",
+    "en": "Irradiated MPC-EV (Rad-EV)"
+   },
+   "sub": {
+    "zh": "促血管活性丧失",
+    "en": "loses pro-angiogenic activity"
+   },
+   "c": 0,
+   "r": 1.9
+  },
+  {
+   "id": "radMiR",
+   "type": "cargo",
+   "status": "evidence",
+   "label": {
+    "zh": "Rad-EV miRNA谱改变",
+    "en": "Rad-EV miRNA profile shift"
+   },
+   "sub": {
+    "zh": "13↓/7↑ (miR-206↓等)",
+    "en": "13 down / 7 up"
+   },
+   "c": 1,
+   "r": 1.9
+  },
+  {
+   "id": "radPred",
+   "type": "target",
+   "status": "evidence",
+   "label": {
+    "zh": "预测靶：VEGF/PI3K-Akt/FoxO",
+    "en": "Predicted targets: VEGF/PI3K-Akt/FoxO"
+   },
+   "sub": {
+    "zh": "仅生物信息学预测",
+    "en": "bioinformatic prediction only"
+   },
+   "c": 2,
+   "r": 1.9
+  },
+  {
+   "id": "myomixEV",
+   "type": "ev-source",
+   "status": "evidence",
+   "label": {
+    "zh": "Myo-MIX转染MSC外泌体",
+    "en": "Myo-MIX-transfected MSC exosome"
+   },
+   "sub": {
+    "zh": "MyoD/MyoG/Myf6",
+    "en": "MyoD/MyoG/Myf6"
+   },
+   "c": 0,
+   "r": 2.85
+  },
+  {
+   "id": "esoMyo",
+   "type": "outcome",
+   "status": "evidence",
+   "label": {
+    "zh": "放射性食管炎修复",
+    "en": "Radiation oesophagitis repair"
+   },
+   "sub": {
+    "zh": "再生↑ · 纤维化↓ · 10 Gy×2",
+    "en": "regeneration ↑ · fibrosis ↓ · 10 Gy×2"
+   },
+   "c": 4,
+   "r": 2.85
+  },
+  {
+   "id": "mscEV",
+   "type": "ev-source",
+   "status": "evidence",
+   "label": {
+    "zh": "MSC-EV",
+    "en": "MSC-EV"
+   },
+   "sub": {
+    "zh": "骨髓/脂肪/脐带 · 最常用来源",
+    "en": "BM / adipose / UC · most common source"
+   },
+   "c": 0,
+   "r": 4.45
+  },
+  {
+   "id": "mac2",
+   "type": "cell-process",
+   "status": "evidence",
+   "label": {
+    "zh": "巨噬细胞 M1→M2 极化",
+    "en": "Macrophage M1→M2 polarization"
+   },
+   "sub": {
+    "zh": "Arg1/CD206↑, NF-κB↓",
+    "en": "Arg1/CD206↑"
+   },
+   "c": 3,
+   "r": 4.45
+  },
+  {
+   "id": "scProlif",
+   "type": "cell-process",
+   "status": "evidence",
+   "label": {
+    "zh": "MuSC 激活/增殖/分化 ↑",
+    "en": "MuSC activation/proliferation/differentiation ↑"
+   },
+   "sub": {
+    "zh": "增殖/分化/融合",
+    "en": "proliferation/differentiation/fusion"
+   },
+   "c": 4,
+   "r": 5.4
+  },
+  {
+   "id": "regen",
+   "type": "outcome",
+   "status": "evidence",
+   "label": {
+    "zh": "再生 ↑",
+    "en": "Regeneration ↑"
+   },
+   "sub": {
+    "zh": "中央核 · eMyHC · CSA",
+    "en": "central nuclei · eMyHC · CSA"
+   },
+   "c": 5,
+   "r": 5.4
+  },
+  {
+   "id": "hdacFap",
+   "type": "ev-source",
+   "status": "evidence",
+   "label": {
+    "zh": "HDACi处理的mdx/DMD FAP-EV",
+    "en": "HDACi-exposed mdx/DMD FAP-EV"
+   },
+   "sub": {
+    "zh": "肌内移植 · mdx",
+    "en": "intramuscular · mdx"
+   },
+   "c": 0,
+   "r": 7.0
+  },
+  {
+   "id": "mir206",
+   "type": "cargo",
+   "status": "evidence",
+   "label": {
+    "zh": "EV miR-206 ↑",
+    "en": "EV miR-206 ↑"
+   },
+   "sub": {
+    "zh": "协同miR簇 · antagomiR-206可阻断",
+    "en": "cooperative miRs · antagomiR-206 blocks"
+   },
+   "c": 1,
+   "r": 7.0
+  },
+  {
+   "id": "muscExp",
+   "type": "cell-process",
+   "status": "evidence",
+   "label": {
+    "zh": "MuSC 激活/扩增 ↑",
+    "en": "MuSC activation / expansion ↑"
+   },
+   "sub": {
+    "zh": "ex vivo + 在体",
+    "en": "ex vivo + in vivo"
+   },
+   "c": 3,
+   "r": 7.0
+  },
+  {
+   "id": "mdxFib",
+   "type": "outcome",
+   "status": "evidence",
+   "label": {
+    "zh": "mdx 再生↑ · 纤维化/炎症↓",
+    "en": "mdx regeneration ↑ · fibrosis / inflammation ↓"
+   },
+   "sub": {
+    "zh": "肌内EV移植",
+    "en": "intramuscular EV transplant"
+   },
+   "c": 5,
+   "r": 7.0
+  },
+  {
+   "id": "esExo",
+   "type": "ev-source",
+   "status": "evidence",
+   "label": {
+    "zh": "胚胎干细胞外泌体 ES-Exo",
+    "en": "Embryonic stem cell exosome (ES-Exo)"
+   },
+   "sub": {
+    "zh": "对照 MEF-Exo 无效",
+    "en": "MEF-Exo control ineffective"
+   },
+   "c": 0,
+   "r": 8.6
+  },
+  {
+   "id": "doxOut",
+   "type": "outcome",
+   "status": "evidence",
+   "label": {
+    "zh": "化疗肌毒性 ↓",
+    "en": "Chemotherapy myotoxicity ↓"
+   },
+   "sub": {
+    "zh": "萎缩/纤维化↓ · 功能↑ · 多柔比星",
+    "en": "atrophy/fibrosis ↓ · function ↑ · doxorubicin"
+   },
+   "c": 5,
+   "r": 8.6
+  },
+  {
+   "id": "pyro",
+   "type": "signaling",
+   "status": "evidence",
+   "label": {
+    "zh": "NLRP3焦亡/GSDME ↓",
+    "en": "NLRP3 pyroptosis / GSDME ↓"
+   },
+   "sub": {
+    "zh": "TLR4/ASC/caspase-1/IL-1β",
+    "en": "TLR4/ASC/caspase-1/IL-1β"
+   },
+   "c": 2,
+   "r": 9.55
+  },
+  {
+   "id": "gapInvivo",
+   "type": "gap",
+   "status": "scaffold",
+   "label": {
+    "zh": "在体辐射肌损伤 + 外源EV + 功能终点",
+    "en": "In vivo irradiated muscle + exogenous EV + functional endpoint"
+   },
+   "sub": {
+    "zh": "0 篇（截至 v0.2）",
+    "en": "0 studies (as of v0.2)"
+   },
+   "c": 0,
+   "r": 11.15
+  },
+  {
+   "id": "gapFap",
+   "type": "gap",
+   "status": "scaffold",
+   "label": {
+    "zh": "辐射 FAP-EV 与纤维化",
+    "en": "Radiation FAP-EV & fibrosis"
+   },
+   "sub": {
+    "zh": "仅 mdx 证据，未在辐射验证",
+    "en": "mdx only; untested after radiation"
+   },
+   "c": 2,
+   "r": 11.15
+  },
+  {
+   "id": "gapSting",
+   "type": "gap",
+   "status": "scaffold",
+   "label": {
+    "zh": "EV 与 cGAS–STING",
+    "en": "EV & cGAS–STING"
+   },
+   "sub": {
+    "zh": "假说，无直接研究",
+    "en": "hypothesis only"
+   },
+   "c": 4,
+   "r": 11.15
+  }
+ ],
+ "edges": [
+  {
+   "id": "EA1",
+   "source": "mpcEV",
+   "target": "radMPC",
+   "direction": "+",
+   "grade": "A",
+   "kind": "direct",
+   "causal": true,
+   "label": {
+    "zh": "提升活力52→71%、BrdU +16%",
+    "en": "viability 52→71%, BrdU +16%"
+   },
+   "refs": [
+    "P40835994"
+   ],
+   "model": {
+    "zh": "受照大鼠MPC",
+    "en": "irradiated rat MPC"
+   },
+   "dose": {
+    "zh": "25–75 µg蛋白/孔",
+    "en": "25–75 µg protein/well"
+   },
+   "time": {
+    "zh": "48–72 h",
+    "en": "48–72 h"
+   },
+   "method": {
+    "zh": "活力/BrdU",
+    "en": "viability/BrdU"
+   },
+   "functional": {
+    "zh": "增殖恢复",
+    "en": "proliferation"
+   },
+   "limitation": {
+    "zh": "纯体外；无在体、无功能学终点。",
+    "en": "In vitro only; no in vivo or functional endpoint."
+   }
+  },
+  {
+   "id": "EA2",
+   "source": "mpcEV",
+   "target": "radEndo",
+   "direction": "+",
+   "grade": "A",
+   "kind": "direct",
+   "causal": true,
+   "label": {
+    "zh": "HUVEC成管+1.5×、微血管密度+3×",
+    "en": "HUVEC tubes +1.5×, microvessel +3×"
+   },
+   "refs": [
+    "P40835994"
+   ],
+   "model": {
+    "zh": "HUVEC/微血管凝胶",
+    "en": "HUVEC / microvessel gel"
+   },
+   "dose": {
+    "zh": "25–75 µg蛋白",
+    "en": "25–75 µg protein"
+   },
+   "time": {
+    "zh": "24 h / d7–8",
+    "en": "24 h / d7–8"
+   },
+   "method": {
+    "zh": "成管/微血管碎片",
+    "en": "tube/MVF assay"
+   },
+   "functional": {
+    "zh": "血管读出",
+    "en": "angiogenic readout"
+   },
+   "limitation": {
+    "zh": "体外；受照来源EV(Rad-EV)无此活性。",
+    "en": "In vitro; Rad-EV lacks this activity."
+   }
+  },
+  {
+   "id": "EA3",
+   "source": "radEVsrc",
+   "target": "radMiR",
+   "direction": "+",
+   "grade": "A",
+   "kind": "observed",
+   "causal": false,
+   "label": {
+    "zh": "Rad-EV miRNA 13↓/7↑",
+    "en": "Rad-EV miRNA 13 down / 7 up"
+   },
+   "refs": [
+    "P40835994"
+   ],
+   "model": {
+    "zh": "受照MPC条件EV",
+    "en": "irradiated MPC EV"
+   },
+   "dose": {
+    "zh": "—",
+    "en": "—"
+   },
+   "time": {
+    "zh": "48 h",
+    "en": "48 h"
+   },
+   "method": {
+    "zh": "nCounter",
+    "en": "nCounter"
+   },
+   "functional": {
+    "zh": "miR-206/let-7b/miR-34a/miR-499/miR-132↓",
+    "en": "miR-206/let-7b/miR-34a/miR-499/miR-132 down"
+   },
+   "limitation": {
+    "zh": "下游通路仅生信预测，未功能验证。",
+    "en": "Downstream pathways predicted in silico only."
+   }
+  },
+  {
+   "id": "EA4",
+   "source": "radMiR",
+   "target": "radPred",
+   "direction": "+",
+   "grade": "C",
+   "kind": "candidate",
+   "causal": false,
+   "label": {
+    "zh": "预测靶VEGF/PI3K-Akt/FoxO（仅生信）",
+    "en": "predicted VEGF/PI3K-Akt/FoxO (in silico)"
+   },
+   "refs": [
+    "P40835994"
+   ],
+   "model": {
+    "zh": "同上",
+    "en": "same"
+   },
+   "dose": {
+    "zh": "—",
+    "en": "—"
+   },
+   "time": {
+    "zh": "—",
+    "en": "—"
+   },
+   "method": {
+    "zh": "靶点预测",
+    "en": "target prediction"
+   },
+   "functional": {
+    "zh": "候选",
+    "en": "candidate"
+   },
+   "limitation": {
+    "zh": "降级为C：无功能验证；候选miRNA需逐一验证。",
+    "en": "Downgraded to C: no functional validation."
+   }
+  },
+  {
+   "id": "EA5",
+   "source": "myomixEV",
+   "target": "esoMyo",
+   "direction": "+",
+   "grade": "A",
+   "kind": "direct",
+   "causal": true,
+   "label": {
+    "zh": "Mrf4/Myf5/Myogenin↑，胶原↓，CD68↓",
+    "en": "Mrf4/Myf5/Myogenin↑, collagen↓, CD68↓"
+   },
+   "refs": [
+    "P41936013"
+   ],
+   "model": {
+    "zh": "放射性食管炎在体",
+    "en": "radiation esophagitis in vivo"
+   },
+   "dose": {
+    "zh": "未报告",
+    "en": "not reported"
+   },
+   "time": {
+    "zh": "4 周",
+    "en": "4 weeks"
+   },
+   "method": {
+    "zh": "组化/qPCR",
+    "en": "histology/qPCR"
+   },
+   "functional": {
+    "zh": "再生↑/纤维化↓",
+    "en": "regen↑/fibrosis↓"
+   },
+   "limitation": {
+    "zh": "靶器官以平滑肌为主；无剂量、无肌力终点。",
+    "en": "Target is largely smooth muscle; no dose or force endpoint."
+   }
+  },
+  {
+   "id": "EM1",
+   "source": "mscEV",
+   "target": "mac2",
+   "direction": "+",
+   "grade": "B",
+   "kind": "pharmacology",
+   "causal": true,
+   "label": {
+    "zh": "M1→M2（Arg1/CD206↑, IL6/Nos2↓）",
+    "en": "M1→M2 (Arg1/CD206↑, IL6/Nos2↓)"
+   },
+   "refs": [
+    "P28186708",
+    "P33323007",
+    "P37964317"
+   ],
+   "model": {
+    "zh": "CTX/挫伤/VML",
+    "en": "CTX/contusion/VML"
+   },
+   "dose": {
+    "zh": "1–100 µg",
+    "en": "1–100 µg"
+   },
+   "time": {
+    "zh": "d1–d7",
+    "en": "d1–d7"
+   },
+   "method": {
+    "zh": "流式/组化",
+    "en": "flow/histology"
+   },
+   "functional": {
+    "zh": "炎症消退",
+    "en": "inflammation resolution"
+   },
+   "limitation": {
+    "zh": "非辐射模型；巨噬细胞清除证实依赖性。",
+    "en": "Non-radiation models; macrophage depletion confirms dependence."
+   }
+  },
+  {
+   "id": "EM2",
+   "source": "mac2",
+   "target": "scProlif",
+   "direction": "+",
+   "grade": "B",
+   "kind": "observed",
+   "causal": false,
+   "label": {
+    "zh": "M2环境支持MuSC增殖分化",
+    "en": "M2 milieu supports MuSC"
+   },
+   "refs": [
+    "P33323007",
+    "P37964317"
+   ],
+   "model": {
+    "zh": "同上",
+    "en": "same"
+   },
+   "dose": {
+    "zh": "—",
+    "en": "—"
+   },
+   "time": {
+    "zh": "d3–d7",
+    "en": "d3–d7"
+   },
+   "method": {
+    "zh": "组化",
+    "en": "histology"
+   },
+   "functional": {
+    "zh": "再生",
+    "en": "regeneration"
+   },
+   "limitation": {
+    "zh": "非辐射模型。",
+    "en": "Non-radiation models."
+   }
+  },
+  {
+   "id": "EM6",
+   "source": "scProlif",
+   "target": "regen",
+   "direction": "+",
+   "grade": "B",
+   "kind": "observed",
+   "causal": false,
+   "label": {
+    "zh": "再生↑：中央核/eMyHC/CSA",
+    "en": "regeneration↑: central nuclei/eMyHC/CSA"
+   },
+   "refs": [
+    "P38442155",
+    "P33323007",
+    "P42823972"
+   ],
+   "model": {
+    "zh": "多模型",
+    "en": "multiple"
+   },
+   "dose": {
+    "zh": "—",
+    "en": "—"
+   },
+   "time": {
+    "zh": "d7–d28",
+    "en": "d7–d28"
+   },
+   "method": {
+    "zh": "组化",
+    "en": "histology"
+   },
+   "functional": {
+    "zh": "再生",
+    "en": "regen"
+   },
+   "limitation": {
+    "zh": "非辐射模型。",
+    "en": "Non-radiation."
+   }
+  },
+  {
+   "id": "EF7",
+   "source": "hdacFap",
+   "target": "mir206",
+   "direction": "+",
+   "grade": "B",
+   "kind": "direct",
+   "causal": true,
+   "label": {
+    "zh": "HDACi提高FAP-EV中miR-206等一组miR",
+    "en": "HDACi raises miR-206 and a miR subset in FAP-EVs"
+   },
+   "refs": [
+    "P32754983"
+   ],
+   "model": {
+    "zh": "mdx小鼠与DMD患者FAP",
+    "en": "FAPs from mdx mice and DMD patients"
+   },
+   "dose": {
+    "zh": "HDACi暴露后收集EV",
+    "en": "EVs collected after HDACi exposure"
+   },
+   "time": {
+    "zh": "摘要未报告",
+    "en": "not reported in abstract"
+   },
+   "method": {
+    "zh": "EV miRNA谱；EV介导miR向MuSC转移",
+    "en": "EV miRNA profiling; EV-mediated miR transfer to MuSCs"
+   },
+   "functional": {
+    "zh": "EV货物改变",
+    "en": "EV cargo shift"
+   },
+   "limitation": {
+    "zh": "非辐射（营养不良模型）；货物变化依赖HDACi预处理。",
+    "en": "Non-radiation (dystrophy); cargo change depends on HDACi exposure."
+   }
+  },
+  {
+   "id": "EF8",
+   "source": "mir206",
+   "target": "muscExp",
+   "direction": "+",
+   "grade": "B",
+   "kind": "direct",
+   "causal": true,
+   "label": {
+    "zh": "miR-206是EV诱导MuSC扩增与再生所必需（antagomiR阻断）",
+    "en": "miR-206 required for EV-induced MuSC expansion and regeneration (antagomiR)"
+   },
+   "refs": [
+    "P32754983"
+   ],
+   "model": {
+    "zh": "mdx小鼠；MuSC ex vivo",
+    "en": "mdx mice; MuSCs ex vivo"
+   },
+   "dose": {
+    "zh": "肌内EV移植",
+    "en": "intramuscular EV transplantation"
+   },
+   "time": {
+    "zh": "摘要未报告",
+    "en": "not reported in abstract"
+   },
+   "method": {
+    "zh": "antagomiR逐一阻断单个miR",
+    "en": "antagomiR blockade of individual miRs"
+   },
+   "functional": {
+    "zh": "MuSC激活/扩增",
+    "en": "MuSC activation/expansion"
+   },
+   "limitation": {
+    "zh": "非辐射；因果检验较强（antagomiR-206），但净效应来自多miR协同。",
+    "en": "Non-radiation; strong causal test (antagomiR-206), but the net effect comes from cooperating miRs."
+   }
+  },
+  {
+   "id": "EF9",
+   "source": "muscExp",
+   "target": "mdxFib",
+   "direction": "+",
+   "grade": "B",
+   "kind": "observed",
+   "causal": false,
+   "label": {
+    "zh": "再生↑，纤维化与炎症↓",
+    "en": "regeneration ↑, fibrosis and inflammation ↓"
+   },
+   "refs": [
+    "P32754983"
+   ],
+   "model": {
+    "zh": "mdx小鼠",
+    "en": "mdx mice"
+   },
+   "dose": {
+    "zh": "肌内EV移植",
+    "en": "intramuscular EV transplantation"
+   },
+   "time": {
+    "zh": "摘要未报告",
+    "en": "not reported in abstract"
+   },
+   "method": {
+    "zh": "组织学（再生/纤维化/炎症）",
+    "en": "histology (regeneration/fibrosis/inflammation)"
+   },
+   "functional": {
+    "zh": "组织学改善",
+    "en": "histological improvement"
+   },
+   "limitation": {
+    "zh": "v0.1误排除（标为“无EV干预”），v0.2按摘要更正纳入；与辐射FAP纤维化缺口直接相关，但未在辐射模型验证。",
+    "en": "Wrongly excluded in v0.1 (\"no EV intervention\"); corrected in v0.2 from the abstract. Directly relevant to the radiation FAP-fibrosis gap but untested in radiation."
+   }
+  },
+  {
+   "id": "ED10",
+   "source": "esExo",
+   "target": "pyro",
+   "direction": "-",
+   "grade": "B",
+   "kind": "direct",
+   "causal": true,
+   "label": {
+    "zh": "ES-Exo → TLR4/NLRP3/ASC/caspase-1/IL-1β/IL-18 ↓（焦亡↓）",
+    "en": "ES-Exo → TLR4/NLRP3/ASC/caspase-1/IL-1β/IL-18 ↓ (pyroptosis ↓)"
+   },
+   "refs": [
+    "P33316945"
+   ],
+   "model": {
+    "zh": "化疗（多柔比星）肌毒性，C57BL/6J小鼠（10±2周）",
+    "en": "chemotherapy (doxorubicin) muscle toxicity, C57BL/6J mice (10±2 wk)"
+   },
+   "dose": {
+    "zh": "ES-Exo给药（剂量见原文）；MEF-Exo为阴性对照",
+    "en": "ES-Exo (dose in paper); MEF-Exo negative control"
+   },
+   "time": {
+    "zh": "摘要未报告",
+    "en": "not reported in abstract"
+   },
+   "method": {
+    "zh": "炎症小体/焦亡标志物；巨噬细胞表型",
+    "en": "inflammasome/pyroptosis markers; macrophage phenotype"
+   },
+   "functional": {
+    "zh": "TNF-α/IL-6↓，M1↓/M2↑",
+    "en": "TNF-α/IL-6 ↓, M1 ↓ / M2 ↑"
+   },
+   "limitation": {
+    "zh": "非辐射，但同为肿瘤治疗相关肌损伤；焦亡为关联，未用NLRP3/caspase-1抑制剂验证因果。",
+    "en": "Non-radiation but a cancer-therapy muscle injury; pyroptosis link is associative—no NLRP3/caspase-1 inhibitor causal test."
+   }
+  },
+  {
+   "id": "ED11",
+   "source": "esExo",
+   "target": "doxOut",
+   "direction": "+",
+   "grade": "B",
+   "kind": "pharmacology",
+   "causal": true,
+   "label": {
+    "zh": "ES-Exo → 肌萎缩/纤维化↓、肌功能↑",
+    "en": "ES-Exo → atrophy/fibrosis ↓, muscle function ↑"
+   },
+   "refs": [
+    "P33316945"
+   ],
+   "model": {
+    "zh": "化疗（多柔比星）肌毒性，C57BL/6J小鼠（10±2周）",
+    "en": "chemotherapy (doxorubicin) muscle toxicity, C57BL/6J mice (10±2 wk)"
+   },
+   "dose": {
+    "zh": "ES-Exo给药；MEF-Exo对照无效",
+    "en": "ES-Exo; MEF-Exo control ineffective"
+   },
+   "time": {
+    "zh": "摘要未报告",
+    "en": "not reported in abstract"
+   },
+   "method": {
+    "zh": "肌功能、组织学",
+    "en": "muscle function, histology"
+   },
+   "functional": {
+    "zh": "肌功能改善",
+    "en": "muscle function improved"
+   },
+   "limitation": {
+    "zh": "非辐射；与放疗同属肿瘤治疗相关肌毒性，是最接近“治疗相关肌损伤+EV”的在体参照之一。",
+    "en": "Non-radiation; like radiotherapy a cancer-treatment myotoxicity—one of the closest in vivo references for therapy-related injury + EV."
+   }
+  }
+ ],
+ "sources": [
+  {
+   "id": "P28186708",
+   "pmid": "28186708",
+   "doi": "10.1002/sctm.16-0363",
+   "journal": "Stem Cells Transl Med",
+   "year": 2017,
+   "title": {
+    "zh": "MSC-EV促肌再生并调节炎症",
+    "en": "Mesenchymal Stem Cell-Derived Extracellular Vesicles as Mediators of Anti-Inflammatory Effects: Endorsement of Macrophage Polarization."
+   },
+   "reviewDepth": {
+    "zh": "全文核查",
+    "en": "Full text reviewed"
+   },
+   "abstractOnly": false,
+   "model": {
+    "zh": "心脏毒素TA",
+    "en": "CTX TA"
+   }
+  },
+  {
+   "id": "P32754983",
+   "pmid": "32754983",
+   "doi": "10.15252/embr.202050863",
+   "journal": "EMBO Rep",
+   "year": 2020,
+   "title": {
+    "zh": "HDAC抑制剂调控营养不良肌FAP-EV中的miRNA",
+    "en": "HDAC inhibitors tune miRNAs in extracellular vesicles of dystrophic muscle-resident mesenchymal cells."
+   },
+   "reviewDepth": {
+    "zh": "摘要核查",
+    "en": "Abstract reviewed"
+   },
+   "abstractOnly": true,
+   "model": {
+    "zh": "mdx小鼠/DMD FAP",
+    "en": "mdx mice / DMD FAPs"
+   }
+  },
+  {
+   "id": "P33316945",
+   "pmid": "33316945",
+   "doi": "10.3390/ph13120450",
+   "journal": "Pharmaceuticals (Basel)",
+   "year": 2020,
+   "title": {
+    "zh": "干细胞外泌体通过对抗焦亡改善多柔比星肌毒性",
+    "en": "Stem Cell-Derived Exosomes Ameliorate Doxorubicin-Induced Muscle Toxicity through Counteracting Pyroptosis."
+   },
+   "reviewDepth": {
+    "zh": "摘要核查",
+    "en": "Abstract reviewed"
+   },
+   "abstractOnly": true,
+   "model": {
+    "zh": "多柔比星肌毒性小鼠",
+    "en": "doxorubicin myotoxicity mice"
+   }
+  },
+  {
+   "id": "P33323007",
+   "pmid": "33323007",
+   "doi": "10.1089/scd.2020.0167",
+   "journal": "Stem Cells Dev",
+   "year": 2021,
+   "title": {
+    "zh": "MSC-EV经巨噬细胞介导促进肌再生",
+    "en": "Bone Marrow Stromal Cell-Derived Exosomes Promote Muscle Healing Following Contusion Through Macrophage Polarization."
+   },
+   "reviewDepth": {
+    "zh": "摘要级核查",
+    "en": "Abstract-level review"
+   },
+   "abstractOnly": true,
+   "model": {
+    "zh": "挫伤/CTX",
+    "en": "contusion/CTX"
+   }
+  },
+  {
+   "id": "P37964317",
+   "pmid": "37964317",
+   "doi": "10.1186/s13287-023-03530-1",
+   "journal": "Stem Cell Res Ther",
+   "year": 2023,
+   "title": {
+    "zh": "MSC-EV调控巨噬细胞促VML修复",
+    "en": "Extracellular vesicles derived from human ESC-MSCs target macrophage and promote anti-inflammation process, angiogenesis, and functional recovery in ACS-induced severe skeletal muscle injury."
+   },
+   "reviewDepth": {
+    "zh": "全文核查",
+    "en": "Full text reviewed"
+   },
+   "abstractOnly": false,
+   "model": {
+    "zh": "VML",
+    "en": "VML"
+   }
+  },
+  {
+   "id": "P38442155",
+   "pmid": "38442155",
+   "doi": "10.1073/pnas.2316544121",
+   "journal": "Proc Natl Acad Sci U S A",
+   "year": 2024,
+   "title": {
+    "zh": "FAP-EV miR-127-3p经S1PR3促成肌、miR-206/27抑制成脂",
+    "en": "Reciprocal communication between FAPs and muscle cells via distinct extracellular vesicle miRNAs in muscle regeneration."
+   },
+   "reviewDepth": {
+    "zh": "全文核查",
+    "en": "Full text reviewed"
+   },
+   "abstractOnly": false,
+   "model": {
+    "zh": "BaCl2 TA",
+    "en": "BaCl2 TA"
+   }
+  },
+  {
+   "id": "P40835994",
+   "pmid": "40835994",
+   "doi": "10.1038/s41598-025-15699-x",
+   "journal": "Sci Rep",
+   "year": 2025,
+   "title": {
+    "zh": "非照射肌前体细胞EV改善受照MPC与内皮功能",
+    "en": "Irradiation of muscle precursor cells impairs the proliferative and angiogenic functions of their extracellular vesicles."
+   },
+   "reviewDepth": {
+    "zh": "全文核查",
+    "en": "Full text reviewed"
+   },
+   "abstractOnly": false,
+   "model": {
+    "zh": "10 Gy大鼠MPC体外",
+    "en": "10 Gy rat MPC in vitro"
+   }
+  },
+  {
+   "id": "P41936013",
+   "pmid": "41936013",
+   "doi": "10.1007/s13770-026-00795-4",
+   "journal": "Tissue Eng Regen Med",
+   "year": 2026,
+   "title": {
+    "zh": "Myo-MIX工程MSC外泌体改善放射性食管炎肌再生",
+    "en": "Regenerative effects of myogenic gene transfected MSC derived exosomes on radiation esophagitis."
+   },
+   "reviewDepth": {
+    "zh": "全文核查",
+    "en": "Full text reviewed"
+   },
+   "abstractOnly": false,
+   "model": {
+    "zh": "放射性食管炎10 Gy×2",
+    "en": "radiation esophagitis 10 Gy×2"
+   }
+  },
+  {
+   "id": "P42823972",
+   "pmid": "42823972",
+   "doi": "10.1016/j.omtn.2026.103087",
+   "journal": "Mol Ther Nucleic Acids",
+   "year": 2026,
+   "title": {
+    "zh": "肌源sEV miR-193b-3p经AP2M1促VML成肌",
+    "en": "Myogenic differentiation-derived small extracellular vesicles as a therapeutic strategy for miR-193b-3p-mediated muscle regeneration."
+   },
+   "reviewDepth": {
+    "zh": "全文核查",
+    "en": "Full text reviewed"
+   },
+   "abstractOnly": false,
+   "model": {
+    "zh": "VML TA",
+    "en": "VML TA"
+   }
+  }
+ ],
+ "links": [
+  {
+   "zh": "辐射肌损伤通路图谱 v0.7（完整）",
+   "en": "Radiation muscle atlas v0.7 (full)",
+   "url": "https://tuanziding.github.io/radiation-muscle-pathway/"
+  },
+  {
+   "zh": "EV 干预通路图 v0.2（完整）",
+   "en": "EV intervention map v0.2 (full)",
+   "url": "https://tuanziding.github.io/radiation-muscle-pathway/ev-intervention-v0.2.html"
+  },
+  {
+   "zh": "GitHub",
+   "en": "GitHub",
+   "url": "https://github.com/TUANZIDING/MechAtlas"
+  }
+ ],
+ "changelog": {
+  "zh": "demo-v0.1：从 EV 干预通路图 v0.2 节选 4 个机制泳道 + 1 个缺口泳道，用 MechAtlas 通用模板重新渲染。",
+  "en": "demo-v0.1: 4 mechanism lanes + 1 gap lane excerpted from the EV map v0.2, re-rendered with the generic MechAtlas template."
+ }
+}

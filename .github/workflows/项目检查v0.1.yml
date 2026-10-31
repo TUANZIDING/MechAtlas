@@ -1,0 +1,44 @@
+name: 项目检查v0.1
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      MECHATLAS_EMAIL: mechatlas-ci@users.noreply.github.com
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python 依赖
+        run: pip install -r requirements.txt
+      - name: 仓库约定（文件名、原始导出、技能镜像、合成样例）
+        run: python3 scripts/check-repo-v0.1.py
+      - name: 单元测试（离线，合成样例）
+        run: python3 tests/run-tests-v0.1.py
+      - name: 演示登记表：schema + 证据契约
+        run: python3 scripts/validate-registry-v0.1.py --registry examples/demo/registry-demo-v0.1.json --studies examples/demo/studies-demo-v0.1.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 安装 Playwright 与 Chromium
+        run: npm install --no-save playwright && npx playwright install --with-deps chromium
+      - name: 构建演示图谱，并确认 docs/index.html 与数据一致
+        run: |
+          node scripts/build-atlas-v0.1.mjs --registry examples/demo/registry-demo-v0.1.json --studies examples/demo/studies-demo-v0.1.json --out docs/index.html
+          git diff --exit-code docs/index.html
+      - name: Playwright 真实点击验证（桌面 + 390 px）
+        run: node scripts/verify-atlas-v0.1.mjs --html docs/index.html --registry examples/demo/registry-demo-v0.1.json --studies examples/demo/studies-demo-v0.1.json --out validation-ci.json
+      - name: 引用解析（PubMed / Crossref 在线；网络故障不判失败，题名不符或查无判失败）
+        run: python3 scripts/verify-refs-v0.1.py examples/demo/registry-demo-v0.1.json --allow-network-fail --out verify-refs-ci.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation
+          path: |
+            validation-ci.json
+            verify-refs-ci.json

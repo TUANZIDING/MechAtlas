@@ -1,0 +1,134 @@
+# MechAtlas topic config v0.1 — copy to config/<your-topic>-v0.1.yaml and fill in.
+# 一个课题一份配置：PICO、纳入/排除、各库检索式、泳道、分级定义都写在这里，脚本只读这份文件。
+version: "0.1"
+
+topic:
+  id: my-topic                       # 运行目录 runs/<id>/，只用小写字母、数字、连字符
+  title:
+    zh: "（中文课题名）"
+    en: "(English topic title)"
+  question: "（一句话研究问题：X 通过哪些分子机制/信号通路影响 Y？）"
+
+contact_email: you@example.org       # API 礼貌访问（NCBI tool/email、OpenAlex/Crossref mailto）；也可用环境变量 MECHATLAS_EMAIL
+
+pico:
+  population: "（目标组织/细胞/物种，如 骨骼肌、成肌细胞、卫星细胞）"
+  exposure: "（暴露/干预，如 电离辐射 X/γ/质子/重离子）"
+  comparator: "（对照，如 假照射/未照射）"
+  outcomes: ["分子通路改变", "细胞过程", "组织结局", "功能结局"]
+  study_types: ["原始研究：在体动物、离体/体外细胞、人体组织"]
+
+eligibility:
+  include:
+    - "原始研究，直接检测目标模型中的分子/通路读出"
+    - "报告了暴露条件（剂量、时间点）"
+  exclude:
+    - "综述、评论、社论、指南（可用于引文追溯，不纳入）"
+    - "非目标暴露（如非电离辐射：激光、超声、微波、光生物调节）"
+    - "只有肿瘤疗效终点、未检测目标组织"
+    - "重复发表（保留信息最全的一篇）"
+  abstract_only_policy: "仅有摘要（会议摘要、无法获取全文）可以纳入，但必须标 abstract_only=yes，最高评 B 级"
+
+dates: {from: "1990-01-01", to: "2026-12-31"}
+languages: [en, zh]
+
+search:
+  max_per_query: 2000                # 每条检索式最多取回条数；冒烟测试用 --max 5 覆盖
+  databases:
+    pubmed:                          # NCBI E-utilities；设置 NCBI_API_KEY 提速
+      enabled: true
+      queries:
+        - id: base
+          query: '("Exposure"[Mesh] OR exposure*[tiab]) AND ("Target tissue"[Mesh] OR target*[tiab]) NOT review[pt]'
+        - id: m1-pathway                 # 每个机制模块一条，便于统计哪个模块贡献了纳入研究
+          query: '(<base>) AND (pathway*[tiab] OR signaling[tiab])'
+    europepmc:                       # 含 PMC 全文与预印本（SRC:PPR）
+      enabled: true
+      queries:
+        - id: tiab
+          query: '(TITLE_ABS:"exposure term" OR TITLE_ABS:"synonym") AND TITLE_ABS:"target tissue"'
+        - id: preprints
+          query: '(TITLE_ABS:"exposure term") AND TITLE_ABS:"target tissue"'
+          preprints_only: true
+    openalex:                        # 需 OPENALEX_API_KEY 才稳定（2026 起匿名按 IP 限额）
+      enabled: true
+      queries:
+        - id: tiab
+          query: '"exposure term" AND "target tissue"'
+          filter: "from_publication_date:1990-01-01"
+    semanticscholar:                 # bulk 语法：+ 与、| 或、- 非；可设 S2_API_KEY
+      enabled: true
+      queries:
+        - id: bulk
+          query: '("exposure term" | synonym) + "target tissue"'
+    crossref:                        # 相关性排序，命中数无意义，只取前 N
+      enabled: true
+      queries:
+        - id: biblio
+          query: "exposure term target tissue mechanism"
+          max: 300
+    biorxiv:                         # 无关键词检索：按日期窗口逐页扫描 + 本地正则；慢，报告扫描比例
+      enabled: false
+      windows:
+        - id: recent
+          from: "2025-01-01"
+          to: "2025-12-31"
+          must: ["exposure regex|synonym", "target regex"]
+          max_scan: 20000
+  manual_exports:                    # 订阅库：Agent 无法登录机构网页，由你手动导出后放 inputs/（已 gitignore）
+    - id: wos1
+      db: wos
+      format: wos                    # wos | scopus-csv | ris | cnki
+      path: "inputs/wos/*.txt"
+      query: 'TS=(("exposure term" OR synonym) AND ("target tissue"))'
+      date: "YYYY-MM-DD"
+    - id: cnki1
+      db: cnki
+      format: cnki                   # RefWorks / EndNote / NoteExpress 自动识别
+      path: "inputs/cnki/*.txt"
+      query: "SU=('暴露词'+'同义词')*('目标组织')"
+      date: "YYYY-MM-DD"
+
+screening:
+  triage_must: ["exposure regex|synonym", "target regex"]   # 仅给出“主题词缺失”提示，不代替人工判断
+  dual_review: false                 # 有第二位审阅者时设 true，在筛查表 notes 中记录分歧与裁决
+
+snowball:
+  backend: openalex                  # openalex | s2
+  max_per_seed: 200
+  min_new: 3                         # 一轮新增纳入 <3 篇即停止
+
+grades:                              # 默认 A/B/C；可按课题改写定义
+  A:
+    zh: "A 直接模型"
+    en: "A direct model"
+    definition_zh: "在目标模型中直接检测（如 辐射照射骨骼肌/肌源细胞），报告了剂量与时间点"
+    definition_en: "Measured directly in the target model, with dose and time point reported"
+  B:
+    zh: "B 邻近模型/条件性"
+    en: "B adjacent / conditional"
+    definition_zh: "非目标但邻近的模型（其他损伤、其他组织），或仅摘要级、条件性证据"
+    definition_en: "Adjacent non-target model, or abstract-level / conditional evidence"
+  C:
+    zh: "C 推断/候选"
+    en: "C inference / candidate"
+    definition_zh: "推断、生物信息学预测、间接或候选证据"
+    definition_en: "Inference, in-silico prediction, indirect or candidate evidence"
+scaffold_rule: "方向矛盾或只有假说的机制画成骨架节点（灰色虚框），不连证据边"
+
+atlas:
+  columns:                           # 从左到右的因果层级（节点 c 坐标 0..n-1）
+    - {zh: "暴露", en: "Exposure"}
+    - {zh: "上游信号", en: "Upstream signal"}
+    - {zh: "通路节点", en: "Pathway node"}
+    - {zh: "细胞过程", en: "Cell process"}
+    - {zh: "组织结局", en: "Tissue outcome"}
+    - {zh: "功能结局", en: "Functional outcome"}
+  lanes:                             # 机制泳道；color 为泳道主色（浅色背景自动生成）
+    - {id: dna, zh: "DNA 损伤与细胞周期", en: "DNA damage & cell cycle", color: "#d1475c"}
+    - {id: stem, zh: "干细胞与再生", en: "Stem cells & regeneration", color: "#2a8fb0"}
+    - {id: fibro, zh: "纤维化", en: "Fibrosis", color: "#b07d2a"}
+
+report:
+  language: zh                       # 中文报告，结论先行
+  not_searched_note: "（写明未检索的数据库及原因，如 Scopus/Embase 未订阅）"

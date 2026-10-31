@@ -1,0 +1,158 @@
+# Example topic: radiation-induced skeletal muscle injury — molecular pathway atlas
+# 来源：TUANZIDING/radiation-muscle-pathway v0.7 系统筛查（2026-10-21，PubMed E-utilities）。
+# 检索式逐字取自该仓库 docs/v0.7/screen-queries-v07.json；当时的命中数写在 hits_2026_10_21 供复现对照。
+# 结果：去重后筛 891 个标题、精读约 95 篇摘要、18 篇全文；纳入 53 篇（A 15 / B 26 / C 12）。
+# 在线图谱：https://tuanziding.github.io/radiation-muscle-pathway/
+version: "0.1"
+
+topic:
+  id: radiation-muscle
+  title:
+    zh: "辐射致骨骼肌损伤 · 分子信号通路图谱"
+    en: "Radiation-induced skeletal muscle injury · molecular pathway atlas"
+  question: "电离辐射通过哪些分子机制与信号通路导致骨骼肌损伤、修复障碍与纤维化？"
+  reference_atlas: "https://tuanziding.github.io/radiation-muscle-pathway/"
+
+contact_email: you@example.org
+
+pico:
+  population: "骨骼肌组织、肌纤维、肌卫星细胞/成肌细胞（含 C2C12）、FAP、肌内微血管；动物与人体组织"
+  exposure: "电离辐射：X 线、γ 射线、电子、质子、重离子（含航天辐射中可分离辐射效应的设计）"
+  comparator: "假照射 / 未照射对照，或照射前基线"
+  outcomes: ["DNA 损伤应答", "ROS/NO", "炎症与趋化", "TGF-β/纤维化", "蛋白稳态（UPS）", "线粒体", "离子/膜", "卫星细胞增殖分化", "肌量与功能"]
+  study_types: ["在体动物", "离体/体外细胞", "人体放疗后肌肉组织"]
+
+eligibility:
+  include:
+    - "原始研究，直接照射骨骼肌或肌源细胞，并检测分子/通路读出"
+    - "航天辐射研究仅在析因设计或体外设置能分离辐射效应时纳入（space_flag）"
+  exclude:
+    - "综述、评论、社论"
+    - "非电离辐射：激光、光生物调节、超声、微波、LED、红外、射频、紫外"
+    - "横纹肌肉瘤等肿瘤疗效研究、影像学（MRI/CT）研究、皮瓣研究"
+    - "辐射效应无法分离的航天/复合暴露；仅供血动脉的血管研究"
+  abstract_only_policy: "所有 A 级必须读全文；仅摘要的纳入研究最高评 B 级并标 abstract_only"
+
+dates: {from: "1990-01-01", to: "2026-12-31"}
+languages: [en]
+
+search:
+  max_per_query: 2000
+  databases:
+    pubmed:
+      enabled: true
+      queries:
+        - id: base
+          note: "全时段基础检索 4,639 条：按设计不逐条筛，改用下面的模块检索 + 两组补充检索"
+          hits_2026_10_21: 4639
+          max: 0
+          query: '("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]'
+        - id: m1-nmj
+          hits_2026_10_21: 55
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND ("neuromuscular junction"[tiab] OR denervat*[tiab] OR "motor endplate"[tiab] OR acetylcholine receptor*[tiab] OR agrin[tiab] OR MuSK[tiab])'
+        - id: m2-igf-akt
+          hits_2026_10_21: 56
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND ("IGF-1"[tiab] OR "IGF-I"[tiab] OR "insulin-like growth factor"[tiab] OR Akt[tiab] OR mTOR[tiab] OR "PI3K"[tiab] OR "S6K"[tiab] OR p70S6K[tiab])'
+        - id: m3-nfkb-il6
+          hits_2026_10_21: 60
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND ("NF-kappaB"[tiab] OR "NF-kB"[tiab] OR "NF-κB"[tiab] OR "nuclear factor kappa"[tiab] OR "IL-6"[tiab] OR interleukin-6[tiab] OR STAT3[tiab] OR TNF[tiab] OR "tumor necrosis factor"[tiab])'
+        - id: m4-ups
+          hits_2026_10_21: 37
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND (MuRF1[tiab] OR "MuRF-1"[tiab] OR atrogin*[tiab] OR MAFbx[tiab] OR Fbxo32[tiab] OR Trim63[tiab] OR ubiquitin*[tiab] OR proteasom*[tiab] OR FoxO*[tiab])'
+        - id: m5-cgas-sting
+          hits_2026_10_21: 0
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND (cGAS[tiab] OR STING[tiab] OR "cyclic GMP-AMP"[tiab] OR TMEM173[tiab] OR "type I interferon"[tiab])'
+        - id: m6-myostatin
+          hits_2026_10_21: 13
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND (myostatin[tiab] OR GDF8[tiab] OR "GDF-8"[tiab] OR activin*[tiab] OR SMAD2[tiab] OR "Smad2/3"[tiab] OR SMAD3[tiab] OR follistatin[tiab])'
+        - id: m7-mito
+          hits_2026_10_21: 25
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND ("PGC-1"[tiab] OR PGC1*[tiab] OR PPARGC1A[tiab] OR mitophag*[tiab] OR "mitochondrial biogenesis"[tiab] OR PINK1[tiab] OR Parkin[tiab] OR TFAM[tiab] OR AMPK[tiab])'
+        - id: m8-other
+          hits_2026_10_21: 17
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND ("HIF-1"[tiab] OR HIF1*[tiab] OR hypoxia-inducible[tiab] OR YAP[tiab] OR Hippo[tiab] OR TAZ[tiab] OR "beta-catenin"[tiab] OR "β-catenin"[tiab] OR CTGF[tiab] OR CCN2[tiab] OR "connective tissue growth factor"[tiab] OR NLRP3[tiab] OR pyroptos*[tiab] OR inflammasome[tiab] OR ferroptos*[tiab] OR GPX4[tiab] OR PDGFR*[tiab])'
+        - id: base-2023-2026
+          hits_2026_10_21: 482
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND ("2023/01/01"[dp] : "2026/12/31"[dp])'
+        - id: supp-a-pathway-pre2023
+          hits_2026_10_21: 152
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND (pathway*[tiab] OR signaling[tiab] OR signalling[tiab] OR "gene expression"[tiab] OR transcriptom*[tiab] OR proteom*[tiab]) AND ("1990/01/01"[dp]:"2022/12/31"[dp]) NOT (laser[tiab] OR photobiomodulation[tiab] OR "low-level"[tiab] OR ultrasound[tiab] OR microwave[tiab] OR LED[tiab] OR light[ti] OR rhabdomyosarcoma[tiab] OR infrared[tiab])'
+        - id: supp-b-title-pre2023
+          hits_2026_10_21: 144
+          query: '(("Radiation"[Mesh] OR irradiat*[tiab] OR radiotherap*[tiab] OR "ionizing radiation"[tiab]) AND ("Muscle, Skeletal"[Mesh] OR "skeletal muscle"[tiab] OR "satellite cell*"[tiab] OR myoblast*[tiab] OR C2C12[tiab]) NOT review[pt]) AND (irradiat*[ti] OR radiation[ti] OR ionizing[ti] OR gamma[ti] OR "X-ray"[ti] OR radiotherap*[ti] OR proton*[ti]) AND (myoblast*[ti] OR "satellite cell*"[ti] OR C2C12[ti] OR "muscle stem"[ti] OR muscle[ti] OR myogen*[ti] OR myotube*[ti]) AND ("1990/01/01"[dp]:"2022/12/31"[dp]) NOT (laser[tiab] OR photobiomodulation[tiab] OR "low-level"[tiab] OR ultrasound[ti] OR microwave[tiab] OR LED[tiab] OR rhabdomyosarcoma[ti] OR infrared[tiab] OR "radiofrequency"[tiab] OR ultraviolet[ti] OR UV[ti] OR flap[ti] OR sarcopenia[ti] OR MRI[ti] OR "magnetic resonance"[ti] OR CT[ti] OR "computed tomography"[ti])'
+    europepmc:
+      enabled: true
+      queries:
+        - id: preprints
+          note: "v0.7 未系统检索预印本；此条为 MechAtlas 推荐的补充"
+          preprints_only: true
+          query: '(TITLE_ABS:irradiat* OR TITLE_ABS:radiotherap* OR TITLE_ABS:"ionizing radiation") AND (TITLE_ABS:"skeletal muscle" OR TITLE_ABS:myoblast* OR TITLE_ABS:"satellite cell*")'
+    openalex:
+      enabled: true
+      queries:
+        - id: tiab
+          query: '(irradiation OR radiotherapy OR "ionizing radiation") AND ("skeletal muscle" OR myoblast OR "satellite cell")'
+    semanticscholar:
+      enabled: true
+      queries:
+        - id: bulk
+          query: '(irradiation | radiotherapy | "ionizing radiation") + ("skeletal muscle" | myoblast* | "satellite cell*")'
+    crossref:
+      enabled: false
+      queries:
+        - id: biblio
+          query: "ionizing radiation skeletal muscle satellite cell signaling"
+          max: 300
+  manual_exports:
+    - id: wos1
+      db: wos
+      format: wos
+      path: "inputs/radiation-muscle/wos/*.txt"
+      query: 'TS=((irradiat* OR radiotherap* OR "ionizing radiation") AND ("skeletal muscle" OR myoblast* OR "satellite cell*"))'
+      date: "YYYY-MM-DD"
+
+screening:
+  triage_must: ["irradiat|radiation|radiotherap|gamma|x-ray|proton|heavy ion", "muscle|myoblast|satellite cell|c2c12|myotube|myofib"]
+
+snowball:
+  backend: openalex
+  max_per_seed: 200
+  min_new: 3
+
+grades:
+  A:
+    zh: "A 辐射模型直接证据"
+    en: "A direct radiation-muscle evidence"
+    definition_zh: "直接照射骨骼肌或肌源细胞，在该模型中检测到该关系；A 级均已读全文"
+    definition_en: "Measured directly in irradiated skeletal muscle or muscle-derived cells; full text read"
+  B:
+    zh: "B 邻近/条件性"
+    en: "B adjacent / conditional"
+    definition_zh: "辐射模型但条件性（剂量/时相/合并因素依赖）、仅摘要，或非肌肉邻近模型"
+    definition_en: "Conditional (dose/time/co-factor dependent), abstract-only, or adjacent non-muscle model"
+  C:
+    zh: "C 推断/候选"
+    en: "C inference / candidate"
+    definition_zh: "间接、推断或候选（如肿瘤外泌体介导、仅 mRNA 推断）"
+    definition_en: "Indirect, inferred or candidate"
+scaffold_rule: "方向矛盾（如 Myostatin mRNA↓/蛋白↑）或 0 篇（cGAS–STING）的机制画骨架节点，不连证据边"
+
+atlas:
+  columns:
+    - {zh: "辐射暴露", en: "Radiation"}
+    - {zh: "早期损伤", en: "Early damage"}
+    - {zh: "信号节点", en: "Signal"}
+    - {zh: "细胞过程", en: "Cell process"}
+    - {zh: "组织结局", en: "Tissue outcome"}
+    - {zh: "功能结局", en: "Function"}
+  lanes:
+    - {id: ddr, zh: "DNA 损伤应答", en: "DNA damage response", color: "#d1475c"}
+    - {id: ros, zh: "ROS / NO · 微血管", en: "ROS / NO · microvasculature", color: "#13907d"}
+    - {id: inflam, zh: "炎症 · 趋化 · SASP", en: "Inflammation · chemokines · SASP", color: "#7a52c9"}
+    - {id: fibro, zh: "TGF-β / ECM 纤维化", en: "TGF-β / ECM fibrosis", color: "#b07d2a"}
+    - {id: musc, zh: "卫星细胞与再生", en: "Satellite cells & regeneration", color: "#2a8fb0"}
+    - {id: prot, zh: "蛋白稳态 · 线粒体 · 离子/膜", en: "Proteostasis · mitochondria · ion/membrane", color: "#4a74c9"}
+
+report:
+  language: zh
+  not_searched_note: "v0.7 只检索 PubMed；Scopus/Embase 未订阅；中文库未检索。基础检索 2023 年前约 3,700 条未逐条筛（残余缺口）。"

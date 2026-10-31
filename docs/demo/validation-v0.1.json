@@ -1,0 +1,155 @@
+{
+  "atlas": "demo-v0.1",
+  "html": "docs/index.html",
+  "date": "2026-11-01",
+  "passed": 29,
+  "failed": 0,
+  "pageErrors": [],
+  "checks": [
+    {
+      "name": "header stats derived from data",
+      "pass": true,
+      "detail": "demo-v0.1 · 纳入 9 篇 · A 2 / B 7 / C 0 · 文献 9 · 节点 22 · 关系 13"
+    },
+    {
+      "name": "node count rendered = registry",
+      "pass": true,
+      "detail": "22 / 22"
+    },
+    {
+      "name": "edge count rendered = grouped relations",
+      "pass": true,
+      "detail": "13 / 13"
+    },
+    {
+      "name": "real click on all 22 nodes shows their sources / scaffold note",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "click grade-A edge EA1 shows its label and sources",
+      "pass": true,
+      "detail": "A级\n  非照射 MPC-EV → 受照MPC活力/增殖 ↑\n  \n  A因果验证EA1提升活力52→71%、BrdU +16%\n \n 模型受照大鼠MPC\n 剂量/方案25–75 µg蛋白/孔\n 时间点48–72 h\n 方法活力/BrdU\n"
+    },
+    {
+      "name": "grade-A evidence links point to PubMed / doi.org",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "click grade-B edge EM1 shows its label and sources",
+      "pass": true,
+      "detail": "B级\n  MSC-EV → 巨噬细胞 M1→M2 极化\n  \n  B因果验证EM1M1→M2（Arg1/CD206↑, IL6/Nos2↓）\n \n 模型CTX/挫伤/VML\n 剂量/方案1–100 µg\n 时间点d1–d7\n 方法流式/组化"
+    },
+    {
+      "name": "grade-B evidence links point to PubMed / doi.org",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "click grade-C edge EA4 shows its label and sources",
+      "pass": true,
+      "detail": "C级\n  Rad-EV miRNA谱改变 → 预测靶：VEGF/PI3K-Akt/FoxO\n  \n  C关联EA4预测靶VEGF/PI3K-Akt/FoxO（仅生信）\n \n 模型同上\n 剂量/方案—\n 时间点—\n 方法靶点预测\n 功能读出候"
+    },
+    {
+      "name": "grade-C evidence links point to PubMed / doi.org",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "click on empty canvas clears selection",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "filter A shows only grade-A relations",
+      "pass": true,
+      "detail": "4 visible / 4 expected"
+    },
+    {
+      "name": "filter B shows only grade-B relations",
+      "pass": true,
+      "detail": "8 visible / 8 expected"
+    },
+    {
+      "name": "filter C shows only grade-C relations",
+      "pass": true,
+      "detail": "1 visible / 1 expected"
+    },
+    {
+      "name": "filter All restores every edge",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "EN toggle",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "sources dialog lists every source",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "layout: nodeOverlap = 0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "layout: edgeThroughNode = 0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "layout: badgeOnNode = 0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "layout: textOverflow = 0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "layout: laneLabelOverflow = 0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "layout: nodeOutsideLane = 0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: no horizontal overflow",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: console/page errors = []",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390 px: no horizontal overflow",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390 px: real click on node mpcEV opens inspector",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390 px: toolbar fits (no button clipped off-screen without scroll)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390 px: console/page errors = []",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+FN Clarivate Analytics Web of Science
+VR 1.0
+PT J
+AU Zhang, S
+   Li, M
+AF Zhang, San
+   Li, Mei
+TI Synthetic record one: irradiation alters
+   satellite cell signalling in a mouse model
+SO SYNTHETIC JOURNAL OF RADIATION BIOLOGY
+LA English
+DT Article
+AB Synthetic abstract. Hindlimb irradiation (10 Gy) reduced satellite cell
+   proliferation at day 7.
+DI 10.99999/synthetic.001
+PM 90000001
+PY 2024
+UT WOS:000000000000001
+ER
+
+PT J
+AU Wang, W
+TI Synthetic record two: exosomes and muscle regeneration
+SO SYNTHETIC MUSCLE REPORTS
+LA English
+DT Article; Early Access
+AB Synthetic abstract two.
+DI 10.99999/synthetic.002
+PY 2025
+UT WOS:000000000000002
+ER
+
+EF

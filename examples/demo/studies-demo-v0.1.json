@@ -1,0 +1,254 @@
+[
+ {
+  "id": "pmid:28186708",
+  "pmid": "28186708",
+  "doi": "10.1002/sctm.16-0363",
+  "year": 2017,
+  "journal": "Stem Cells Transl Med",
+  "title": "Mesenchymal Stem Cell-Derived Extracellular Vesicles as Mediators of Anti-Inflammatory Effects: Endorsement of Macrophage Polarization.",
+  "grade": "B",
+  "model": "cardiotoxin (CTX) injury of tibialis anterior",
+  "species": "mouse (in vivo); human adipose MSC, mouse BM macrophages",
+  "abstract_only": false,
+  "review_depth": "full-text",
+  "lanes": [
+   "musc"
+  ],
+  "causal_test": {
+   "done": false,
+   "what": null
+  },
+  "limitation": {
+   "zh": "无EV货物敲降或巨噬细胞清除的因果实验；功能学（力量）终点缺失。",
+   "en": "No cargo knockdown or macrophage-depletion causal arm; no functional (force) endpoint."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:32754983",
+  "pmid": "32754983",
+  "doi": "10.15252/embr.202050863",
+  "year": 2020,
+  "journal": "EMBO Rep",
+  "title": "HDAC inhibitors tune miRNAs in extracellular vesicles of dystrophic muscle-resident mesenchymal cells.",
+  "grade": "B",
+  "model": "mdx (DMD) dystrophic muscle",
+  "species": "mouse (mdx); human DMD FAPs",
+  "abstract_only": true,
+  "review_depth": "abstract",
+  "lanes": [
+   "fibro"
+  ],
+  "causal_test": {
+   "done": true,
+   "what": "antagomiR-mediated blockade of individual miRs; miR-206 required for EV-induced MuSC expansion and regeneration"
+  },
+  "limitation": {
+   "zh": "非辐射营养不良模型；疗效依赖HDACi预处理改变的货物；净效应来自多miR协同。",
+   "en": "Non-radiation dystrophy model; efficacy depends on HDACi-shifted cargo; net effect arises from cooperating miRs."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:33316945",
+  "pmid": "33316945",
+  "doi": "10.3390/ph13120450",
+  "year": 2020,
+  "journal": "Pharmaceuticals (Basel)",
+  "title": "Stem Cell-Derived Exosomes Ameliorate Doxorubicin-Induced Muscle Toxicity through Counteracting Pyroptosis.",
+  "grade": "B",
+  "model": "doxorubicin-induced muscle toxicity (chemotherapy)",
+  "species": "mouse (C57BL/6J, 10±2 weeks)",
+  "abstract_only": true,
+  "review_depth": "abstract",
+  "lanes": [
+   "death"
+  ],
+  "causal_test": {
+   "done": false,
+   "what": "MEF-Exo control only; no NLRP3/caspase-1 inhibitor arm"
+  },
+  "limitation": {
+   "zh": "非辐射，但属肿瘤治疗相关肌毒性；焦亡关联未经抑制剂验证。",
+   "en": "Non-radiation but a cancer-therapy myotoxicity; pyroptosis link not tested with inhibitors."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:33323007",
+  "pmid": "33323007",
+  "doi": "10.1089/scd.2020.0167",
+  "year": 2021,
+  "journal": "Stem Cells Dev",
+  "title": "Bone Marrow Stromal Cell-Derived Exosomes Promote Muscle Healing Following Contusion Through Macrophage Polarization.",
+  "grade": "B",
+  "model": "contusion (hit injury) of tibialis anterior",
+  "species": "mouse (young male)",
+  "abstract_only": true,
+  "review_depth": "abstract",
+  "lanes": [
+   "musc"
+  ],
+  "causal_test": {
+   "done": true,
+   "what": "clodronate-liposome macrophage depletion abolishes the benefit"
+  },
+  "limitation": {
+   "zh": "剂量未报告；未鉴定起效货物。",
+   "en": "Dose not reported and the active cargo is not identified."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:37964317",
+  "pmid": "37964317",
+  "doi": "10.1186/s13287-023-03530-1",
+  "year": 2023,
+  "journal": "Stem Cell Res Ther",
+  "title": "Extracellular vesicles derived from human ESC-MSCs target macrophage and promote anti-inflammation process, angiogenesis, and functional recovery in ACS-induced severe skeletal muscle injury.",
+  "grade": "B",
+  "model": "acute compartment syndrome (ACS)-induced severe skeletal muscle injury",
+  "species": "rat",
+  "abstract_only": false,
+  "review_depth": "full-text",
+  "lanes": [
+   "musc"
+  ],
+  "causal_test": {
+   "done": true,
+   "what": "clodronate-liposome macrophage depletion reduces EV efficacy"
+  },
+  "limitation": {
+   "zh": "多miRNA-多通路归因较弱，单一货物未验证；仅3天短期终点。",
+   "en": "Attribution across many miRNAs and pathways is weak with no single cargo validated, and the endpoint is only 3 days."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:38442155",
+  "pmid": "38442155",
+  "doi": "10.1073/pnas.2316544121",
+  "year": 2024,
+  "journal": "Proc Natl Acad Sci U S A",
+  "title": "Reciprocal communication between FAPs and muscle cells via distinct extracellular vesicle miRNAs in muscle regeneration.",
+  "grade": "B",
+  "model": "BaCl2 acute injury of tibialis anterior",
+  "species": "mouse (C57Bl/6J, 8-10 wk)",
+  "abstract_only": false,
+  "review_depth": "full-text",
+  "lanes": [
+   "musc"
+  ],
+  "causal_test": {
+   "done": true,
+   "what": "RNase-protection test of EV lumen cargo; miR mimics in FAPs; Pdgfrα+ cell depletion (iDTR) context arm"
+  },
+  "limitation": {
+   "zh": "miR-127-3p的在体敲降未做，疗效来自永生化FAP的EV，与原代FAP可能不同。",
+   "en": "No in vivo miR-127-3p knockdown; the therapeutic EVs come from immortalised FAPs, which may differ from primary FAPs."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:40835994",
+  "pmid": "40835994",
+  "doi": "10.1038/s41598-025-15699-x",
+  "year": 2025,
+  "journal": "Sci Rep",
+  "title": "Irradiation of muscle precursor cells impairs the proliferative and angiogenic functions of their extracellular vesicles.",
+  "grade": "A",
+  "model": "radiation (10 Gy X-ray, muscle precursor cells in vitro; irradiated MPC + HUVEC/microvascular fragment assays)",
+  "species": "rat MPC (donor/recipient); human HUVEC; rat microvascular fragments",
+  "abstract_only": false,
+  "review_depth": "full-text",
+  "lanes": [
+   "rad"
+  ],
+  "causal_test": {
+   "done": false,
+   "what": "no cargo knockdown, no pathway inhibitor, no EV-depletion rescue; miRNA-pathway link is target prediction only"
+  },
+  "limitation": {
+   "zh": "仅体外：无在体辐射肌肉模型，miRNA-通路关联仅为生物信息学预测，未做靶点验证。",
+   "en": "In vitro only: no in vivo irradiated-muscle model, and the miRNA-pathway link is bioinformatic prediction without target validation."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:41936013",
+  "pmid": "41936013",
+  "doi": "10.1007/s13770-026-00795-4",
+  "year": 2026,
+  "journal": "Tissue Eng Regen Med",
+  "title": "Regenerative effects of myogenic gene transfected MSC derived exosomes on radiation esophagitis.",
+  "grade": "A",
+  "model": "radiation-induced oesophageal muscle injury/fibrosis (10 Gy × 2 fractions, localized oesophageal irradiation)",
+  "species": "mouse (C57BL/6); human BM-MSC donor",
+  "abstract_only": false,
+  "review_depth": "full-text",
+  "lanes": [
+   "rad"
+  ],
+  "causal_test": {
+   "done": false,
+   "what": "comparison with naive MSC-exo and vector-exo only; no cargo knockdown or pathway inhibitor"
+  },
+  "limitation": {
+   "zh": "辐射模型但靶器官为食管（平滑肌为主+部分横纹肌），非四肢骨骼肌；未报告EV剂量、颗粒数与功能学（力学）指标。",
+   "en": "Radiation model, but the target is oesophageal muscle (largely smooth muscle with some striated) rather than limb skeletal muscle; EV dose/particle number and functional (force) outcomes are not reported."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ },
+ {
+  "id": "pmid:42823972",
+  "pmid": "42823972",
+  "doi": "10.1016/j.omtn.2026.103087",
+  "year": 2026,
+  "journal": "Mol Ther Nucleic Acids",
+  "title": "Myogenic differentiation-derived small extracellular vesicles as a therapeutic strategy for miR-193b-3p-mediated muscle regeneration.",
+  "grade": "B",
+  "model": "volumetric muscle loss (VML) of tibialis anterior",
+  "species": "mouse (C57BL/6); human skeletal muscle progenitor cells",
+  "abstract_only": false,
+  "review_depth": "full-text",
+  "lanes": [
+   "musc"
+  ],
+  "causal_test": {
+   "done": true,
+   "what": "AP2M1 knockdown phenocopies; synthetic miR-193b-3p delivery reproduces the effect"
+  },
+  "limitation": {
+   "zh": "仅14天单一时点与组织学终点，无力学恢复数据。",
+   "en": "Single 14-day timepoint with histology only; no functional force recovery data."
+  },
+  "source_dbs": [
+   "pubmed"
+  ],
+  "origin": "radiation-muscle-pathway docs/ev-v0.2/ev-studies-v02.json"
+ }
+]

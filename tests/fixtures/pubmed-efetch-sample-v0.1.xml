@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<PubmedArticleSet>
+<PubmedArticle><MedlineCitation Status="MEDLINE"><PMID Version="1">90000001</PMID>
+<Article><Journal><JournalIssue><PubDate><Year>2024</Year></PubDate></JournalIssue><ISOAbbreviation>Synth J Radiat Biol</ISOAbbreviation></Journal>
+<ArticleTitle>Synthetic record one: irradiation alters satellite cell signalling in a mouse model.</ArticleTitle>
+<Abstract><AbstractText Label="BACKGROUND">Synthetic background.</AbstractText><AbstractText Label="RESULTS">Synthetic <i>results</i>.</AbstractText></Abstract>
+<AuthorList><Author><LastName>Zhang</LastName><Initials>S</Initials></Author><Author><CollectiveName>Synthetic Consortium</CollectiveName></Author></AuthorList>
+<Language>eng</Language><PublicationTypeList><PublicationType>Journal Article</PublicationType></PublicationTypeList>
+</Article><MedlineJournalInfo><MedlineTA>Synth J Radiat Biol</MedlineTA></MedlineJournalInfo></MedlineCitation>
+<PubmedData><ArticleIdList><ArticleId IdType="pubmed">90000001</ArticleId><ArticleId IdType="doi">10.99999/synthetic.001</ArticleId><ArticleId IdType="pmc">PMC0000001</ArticleId></ArticleIdList></PubmedData></PubmedArticle>
+</PubmedArticleSet>

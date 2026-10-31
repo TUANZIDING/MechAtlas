@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "如果使用 MechAtlas，请按以下信息引用。If you use MechAtlas, please cite it as below."
+title: "MechAtlas: an agent skill and toolkit for verified mechanism and signalling-pathway atlases"
+version: 0.1.0
+date-released: 2026-11-01
+license: MIT
+repository-code: "https://github.com/TUANZIDING/MechAtlas"
+url: "https://tuanziding.github.io/MechAtlas/"
+type: software
+authors:
+  - family-names: Ding
+    given-names: Haixiang
+    affiliation: "Affiliated Hospital of Jiangnan University; Soochow University"
+keywords:
+  - systematic review
+  - signalling pathway
+  - evidence grading
+  - PRISMA
+  - AI agent
+  - Codex
+  - Claude Code

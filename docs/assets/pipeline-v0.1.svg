@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400" font-family="-apple-system,'PingFang SC','Microsoft YaHei','Noto Sans CJK SC','WenQuanYi Micro Hei',sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#8795a8"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="600" y="34" text-anchor="middle" font-size="19" font-weight="700" fill="#1d2b3a">课题 YAML → 可核查的机制通路图谱</text>
+<rect x="31.0" y="64" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="31.0" y="76" width="5" height="88" rx="2" fill="#d1475c"/>
+<text x="51.0" y="94" font-size="12" font-weight="700" fill="#d1475c">S1</text>
+<text x="51.0" y="118" font-size="17" font-weight="700" fill="#1d2b3a">多库检索</text>
+<text x="51.0" y="141" font-size="12.5" fill="#5d6b7c">PubMed · EPMC · OpenAlex</text>
+<text x="51.0" y="159" font-size="12.5" fill="#5d6b7c">S2 · Crossref · bioRxiv</text>
+<path d="M241.0,120.0 L260.0,120.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="263.0" y="64" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="263.0" y="76" width="5" height="88" rx="2" fill="#b5482b"/>
+<text x="283.0" y="94" font-size="12" font-weight="700" fill="#b5482b">S1&#x27;</text>
+<text x="283.0" y="118" font-size="17" font-weight="700" fill="#1d2b3a">手动导出导入</text>
+<text x="283.0" y="141" font-size="12.5" fill="#5d6b7c">WoS · Scopus · Embase</text>
+<text x="283.0" y="159" font-size="12.5" fill="#5d6b7c">CNKI · 万方</text>
+<path d="M473.0,120.0 L492.0,120.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="495.0" y="64" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="495.0" y="76" width="5" height="88" rx="2" fill="#b07d2a"/>
+<text x="515.0" y="94" font-size="12" font-weight="700" fill="#b07d2a">S2</text>
+<text x="515.0" y="118" font-size="17" font-weight="700" fill="#1d2b3a">去重 + PRISMA</text>
+<text x="515.0" y="141" font-size="12.5" fill="#5d6b7c">DOI → PMID → 题名</text>
+<text x="515.0" y="159" font-size="12.5" fill="#5d6b7c">计数 · 流程图</text>
+<path d="M705.0,120.0 L724.0,120.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="727.0" y="64" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="727.0" y="76" width="5" height="88" rx="2" fill="#13907d"/>
+<text x="747.0" y="94" font-size="12" font-weight="700" fill="#13907d">S3</text>
+<text x="747.0" y="118" font-size="17" font-weight="700" fill="#1d2b3a">筛查（写理由）</text>
+<text x="747.0" y="141" font-size="12.5" fill="#5d6b7c">题名/摘要 → 全文</text>
+<text x="747.0" y="159" font-size="12.5" fill="#5d6b7c">仅摘要单独标记</text>
+<path d="M937.0,120.0 L956.0,120.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="959.0" y="64" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="959.0" y="76" width="5" height="88" rx="2" fill="#2f9b74"/>
+<text x="979.0" y="94" font-size="12" font-weight="700" fill="#2f9b74">S4</text>
+<text x="979.0" y="118" font-size="17" font-weight="700" fill="#1d2b3a">引文追溯</text>
+<text x="979.0" y="141" font-size="12.5" fill="#5d6b7c">参考文献 + 被引</text>
+<text x="979.0" y="159" font-size="12.5" fill="#5d6b7c">新增 &lt;3 篇即停</text>
+<path d="M1064.0,176 L1064.0,242" stroke="#8795a8" stroke-width="1.8" fill="none" marker-end="url(#a)"/>
+<rect x="959.0" y="246" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="959.0" y="258" width="5" height="88" rx="2" fill="#2a8fb0"/>
+<text x="979.0" y="276" font-size="12" font-weight="700" fill="#2a8fb0">S5</text>
+<text x="979.0" y="300" font-size="17" font-weight="700" fill="#1d2b3a">A/B/C 分级</text>
+<text x="979.0" y="323" font-size="12.5" fill="#5d6b7c">直接 · 邻近 · 推断</text>
+<text x="979.0" y="341" font-size="12.5" fill="#5d6b7c">矛盾/假说 → 骨架</text>
+<path d="M959.0,302.0 L940.0,302.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="727.0" y="246" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="727.0" y="258" width="5" height="88" rx="2" fill="#3d7fe0"/>
+<text x="747.0" y="276" font-size="12" font-weight="700" fill="#3d7fe0">S6</text>
+<text x="747.0" y="300" font-size="17" font-weight="700" fill="#1d2b3a">机制登记 JSON</text>
+<text x="747.0" y="323" font-size="12.5" fill="#5d6b7c">泳道 · 节点 · 证据边</text>
+<text x="747.0" y="341" font-size="12.5" fill="#5d6b7c">方向/剂量/因果/局限</text>
+<path d="M727.0,302.0 L708.0,302.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="495.0" y="246" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="495.0" y="258" width="5" height="88" rx="2" fill="#4a74c9"/>
+<text x="515.0" y="276" font-size="12" font-weight="700" fill="#4a74c9">S7</text>
+<text x="515.0" y="300" font-size="17" font-weight="700" fill="#1d2b3a">交互图谱 HTML</text>
+<text x="515.0" y="323" font-size="12.5" fill="#5d6b7c">由数据渲染 · 浅色</text>
+<text x="515.0" y="341" font-size="12.5" fill="#5d6b7c">点节点看证据</text>
+<path d="M495.0,302.0 L476.0,302.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="263.0" y="246" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="263.0" y="258" width="5" height="88" rx="2" fill="#7a52c9"/>
+<text x="283.0" y="276" font-size="12" font-weight="700" fill="#7a52c9">S8</text>
+<text x="283.0" y="300" font-size="17" font-weight="700" fill="#1d2b3a">核查</text>
+<text x="283.0" y="323" font-size="12.5" fill="#5d6b7c">PMID/DOI API 解析</text>
+<text x="283.0" y="341" font-size="12.5" fill="#5d6b7c">Playwright 真实点击 · 390px</text>
+<path d="M263.0,302.0 L244.0,302.0" stroke="#8795a8" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="31.0" y="246" width="210" height="112" rx="14" fill="#ffffff" stroke="#d5dde8"/>
+<rect x="31.0" y="258" width="5" height="88" rx="2" fill="#8a5cf0"/>
+<text x="51.0" y="276" font-size="12" font-weight="700" fill="#8a5cf0">S9</text>
+<text x="51.0" y="300" font-size="17" font-weight="700" fill="#1d2b3a">中文报告</text>
+<text x="51.0" y="323" font-size="12.5" fill="#5d6b7c">结论先行</text>
+<text x="51.0" y="341" font-size="12.5" fill="#5d6b7c">事实 / 关联 / 推测</text>
+<text x="600" y="384" text-anchor="middle" font-size="12.5" fill="#93a0b1">每个数字来自脚本输出 · 每篇文献来自本地保存的 API 记录 · 订阅库原始导出不公开</text>
+</svg>

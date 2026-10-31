@@ -1,0 +1,135 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://github.com/TUANZIDING/MechAtlas/schema/study-v0.1.schema.json",
+ "title": "MechAtlas included study v0.1",
+ "description": "An included study (a list of these is the studies JSON). Must correspond to a locally saved, API-fetched record.",
+ "type": "array",
+ "items": {
+  "type": "object",
+  "required": [
+   "pmid",
+   "doi",
+   "title",
+   "grade",
+   "abstract_only"
+  ],
+  "anyOf": [
+   {
+    "properties": {
+     "pmid": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "pmid"
+    ]
+   },
+   {
+    "properties": {
+     "doi": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "doi"
+    ]
+   }
+  ],
+  "properties": {
+   "id": {
+    "type": "string"
+   },
+   "pmid": {
+    "type": [
+     "string",
+     "null"
+    ],
+    "pattern": "^\\d{1,9}$"
+   },
+   "doi": {
+    "type": [
+     "string",
+     "null"
+    ],
+    "pattern": "^10\\."
+   },
+   "year": {
+    "type": [
+     "integer",
+     "null"
+    ]
+   },
+   "journal": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "title": {
+    "type": "string"
+   },
+   "grade": {
+    "type": "string",
+    "enum": [
+     "A",
+     "B",
+     "C"
+    ],
+    "description": "default grades; a topic may redefine their meaning but keeps the letters"
+   },
+   "abstract_only": {
+    "type": "boolean",
+    "description": "true if only the abstract was read (conference abstract, no full text)"
+   },
+   "review_depth": {
+    "type": "string",
+    "enum": [
+     "full-text",
+     "abstract",
+     "metadata"
+    ]
+   },
+   "model": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "species": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "lanes": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "include_reason": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "causal_test": {},
+   "limitation": {},
+   "source_dbs": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "origin": {
+    "type": "string"
+   },
+   "notes": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  }
+ }
+}

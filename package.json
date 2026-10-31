@@ -1,0 +1,16 @@
+{
+  "name": "mechatlas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MechAtlas: build and verify single-file interactive pathway atlases from a registry JSON",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build-atlas-v0.1.mjs",
+    "verify": "node scripts/verify-atlas-v0.1.mjs",
+    "shots": "node scripts/shots-atlas-v0.1.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

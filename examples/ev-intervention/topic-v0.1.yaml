@@ -1,0 +1,176 @@
+# Example topic: extracellular vesicles (EV) as an intervention in skeletal muscle injury
+# 来源：TUANZIDING/radiation-muscle-pathway 的 EV 干预通路图 v0.1/v0.2（2026-10-21）。
+# PubMed 检索式逐字取自当时的 queries-v0.1.json / queries-rad-v0.1.json；跨库补检式取自 gap/ 脚本。
+# 结果：v0.1 筛 658 个标题、读 157 篇摘要、32 篇全文，纳入 132；v0.2 并入跨库补检 6 篇 + WoS 3 篇 → 141 篇（A 2 / B 120 / C 19）。
+# 在线图谱：https://tuanziding.github.io/radiation-muscle-pathway/ev-intervention-v0.2.html
+version: "0.1"
+
+topic:
+  id: ev-intervention
+  title:
+    zh: "EV 干预骨骼肌损伤 · 信号通路图"
+    en: "EV intervention in skeletal muscle injury · signaling map"
+  question: "外源细胞外囊泡（EV）通过哪些货物与信号通路改善（或加重）骨骼肌损伤？是否有辐射损伤模型的直接证据？"
+  reference_atlas: "https://tuanziding.github.io/radiation-muscle-pathway/ev-intervention-v0.2.html"
+
+contact_email: you@example.org
+
+pico:
+  population: "骨骼肌损伤模型（辐射、CTX/BaCl2、缺血、VML、去神经、肌少症、恶病质、mdx 等）与肌源细胞"
+  exposure: "外源 EV / 外泌体 / sEV（含工程化 EV、EV-水凝胶复合物）；致病性 EV 单独标注"
+  comparator: "PBS/载体对照、未处理 EV、EV 去除上清"
+  outcomes: ["EV 货物与靶点", "细胞过程（MuSC、巨噬细胞、FAP、内皮）", "组织结局（再生、纤维化、萎缩）", "功能结局（握力、收缩力、灌注）"]
+  study_types: ["在体动物", "体外/离体", "人体（如有）"]
+
+eligibility:
+  include:
+    - "原始研究：给予外源 EV（或明确的 EV 介导致病）并检测骨骼肌/肌源细胞读出"
+    - "报告 EV 来源；尽量提取分离方法、鉴定（NTA/TEM/标志物）、剂量与途径"
+  exclude:
+    - "综述、评论、方案"
+    - "仅 EV 作为生物标志物、无干预"
+    - "仅心肌/平滑肌且无骨骼肌读出（放射性食管炎肌层例外，按辐射模型记录）"
+  abstract_only_policy: "预印本与仅摘要条目单列；v0.2 只并入同行评审条目"
+
+dates: {from: "2000-01-01", to: "2026-12-31"}
+languages: [en]
+
+search:
+  max_per_query: 2000
+  databases:
+    pubmed:
+      enabled: true
+      queries:
+        - id: q1-rad
+          hits_2026_10_21: 23
+          query: '(irradiat*[tiab] OR radiation[tiab] OR radiotherap*[tiab] OR "gamma ray*"[tiab]) AND ("extracellular vesicle*"[tiab] OR exosome*[tiab] OR "small vesicle*"[tiab] OR secretome[tiab]) AND (muscle[tiab] OR myoblast*[tiab] OR "satellite cell*"[tiab] OR myogenic[tiab] OR "muscle stem cell*"[tiab]) NOT review[pt]'
+        - id: q2-inj
+          hits_2026_10_21: 198
+          query: '("extracellular vesicle*"[tiab] OR exosome*[tiab]) AND ("skeletal muscle"[tiab] OR "muscle injury"[tiab] OR "muscle regeneration"[tiab] OR "muscle atrophy"[tiab] OR "muscle repair"[tiab]) AND (cardiotoxin[tiab] OR BaCl2[tiab] OR "barium chloride"[tiab] OR glycerol[tiab] OR contusion[tiab] OR laceration[tiab] OR "volumetric muscle loss"[tiab] OR freeze[tiab] OR crush[tiab] OR injur*[tiab] OR regenerat*[tiab]) NOT review[pt]'
+        - id: q3-atrophy
+          hits_2026_10_21: 234
+          query: '("extracellular vesicle*"[tiab] OR exosome*[tiab]) AND (sarcopenia[tiab] OR cachexia[tiab] OR "muscle atrophy"[tiab] OR "muscle wasting"[tiab] OR denervation[tiab] OR disuse[tiab] OR "hindlimb unloading"[tiab] OR dexamethasone[tiab] OR mdx[tiab] OR "Duchenne"[tiab]) AND (muscle[tiab]) NOT review[pt]'
+        - id: q4-isch
+          hits_2026_10_21: 46
+          query: '("extracellular vesicle*"[tiab] OR exosome*[tiab]) AND ("hindlimb ischemia"[tiab] OR "limb ischemia"[tiab]) AND (muscle[tiab] OR regenerat*[tiab] OR fibrosis[tiab]) NOT review[pt]'
+        - id: q5-source
+          hits_2026_10_21: 115
+          query: '("extracellular vesicle*"[tiab] OR exosome*[tiab]) AND (myoblast*[tiab] OR "satellite cell*"[tiab] OR "fibro-adipogenic"[tiab] OR "muscle stem"[tiab] OR "mesenchymal stem"[tiab] OR "mesenchymal stromal"[tiab]) AND ("skeletal muscle"[tiab]) AND (treat*[tiab] OR therap*[tiab] OR administ*[tiab] OR inject*[tiab]) NOT review[pt]'
+        - id: r1
+          hits_2026_10_21: 15
+          query: 'irradiat* AND (extracellular vesicle* OR exosome*) AND muscle'
+        - id: r2
+          hits_2026_10_21: 42
+          query: '(radiation OR radiotherapy OR "ionizing radiation") AND (extracellular vesicles OR exosomes) AND ("skeletal muscle" OR myoblast OR "satellite cell" OR myofibroblast OR "radiation-induced fibrosis")'
+        - id: r3
+          hits_2026_10_21: 45
+          query: '(extracellular vesicles OR exosomes) AND ("radiation-induced fibrosis" OR "radiation fibrosis" OR "radiation injury" OR "radiation-induced injury") AND (mesenchymal OR stem cell)'
+        - id: r4
+          hits_2026_10_21: 5
+          query: 'Fry CS[au] AND (vesicle* OR exosome*)'
+        - id: r5
+          hits_2026_10_21: 217
+          query: '(muscle progenitor cell* OR "muscle precursor cell*" OR "myogenic progenitor") AND (extracellular vesicle* OR exosome*)'
+    europepmc:
+      enabled: true
+      queries:
+        - id: e3-rad
+          query: '(irradiation OR irradiated OR radiation OR radiotherapy) AND (exosome OR exosomes OR "extracellular vesicles") AND (muscle OR myoblast OR myoblasts OR "satellite cell" OR "satellite cells" OR myogenic)'
+        - id: e7-rad-tiab
+          query: 'TITLE_ABS:(irradiation OR irradiated OR radiation OR radiotherapy OR "gamma ray") AND TITLE_ABS:(exosome OR exosomes OR "extracellular vesicles" OR "extracellular vesicle" OR secretome) AND TITLE_ABS:(muscle OR myoblast OR myoblasts OR "satellite cells" OR myogenic OR myopathy)'
+        - id: e8-ppr-tiab
+          query: 'TITLE_ABS:(exosome OR exosomes OR "extracellular vesicles" OR "extracellular vesicle") AND TITLE_ABS:("skeletal muscle" OR muscle OR myoblast OR myogenic OR sarcopenia OR cachexia OR dystrophy) AND SRC:PPR'
+        - id: e9-nonmed
+          query: 'TITLE_ABS:(exosome OR exosomes OR "extracellular vesicles") AND TITLE_ABS:("skeletal muscle" OR "muscle regeneration" OR "muscle atrophy" OR "muscle injury" OR sarcopenia) AND PUB_YEAR:[2015 TO 2026] AND NOT SRC:MED'
+    openalex:
+      enabled: true
+      queries:
+        - id: tiab
+          query: '("extracellular vesicles" OR exosomes) AND "skeletal muscle" AND (regeneration OR atrophy OR injury OR fibrosis)'
+          filter: "from_publication_date:2015-01-01"
+    semanticscholar:
+      enabled: true
+      queries:
+        - id: s1-main
+          query: '("extracellular vesicles" | exosomes | exosome) + "skeletal muscle" + (regeneration | atrophy | injury | repair | fibrosis)'
+          year: "2015-2026"
+        - id: s2-rad
+          query: '("extracellular vesicles" | exosomes | exosome) + (irradiation | irradiated | radiation | radiotherapy) + (muscle | myoblast | myoblasts | "satellite cells" | myogenic)'
+        - id: s3-models
+          query: '("extracellular vesicles" | exosomes) + muscle + (cardiotoxin | "barium chloride" | "volumetric muscle loss" | "hindlimb ischemia" | denervation | dexamethasone | cachexia | sarcopenia | mdx | "muscular dystrophy" | glycerol)'
+    crossref:
+      enabled: true
+      queries:
+        - id: c2-rad
+          query: "exosomes extracellular vesicles irradiation radiation skeletal muscle myoblast"
+          filter: "from-pub-date:2015-01-01,until-pub-date:2026-12-31"
+          max: 300
+    biorxiv:
+      enabled: false
+      windows:
+        - id: y2025
+          from: "2025-01-01"
+          to: "2025-12-31"
+          must: ['exosom|extracellular vesicle|small vesicle|\bsEVs?\b', 'skeletal muscle|myoblast|myogen|satellite cell|sarcopeni|cachexi|muscle atroph|muscle regenerat|muscle injur|muscular dystroph|\bmdx\b|myotube|muscle wasting']
+          max_scan: 60000
+  manual_exports:
+    - id: wos1
+      db: wos
+      format: wos
+      path: "inputs/ev-intervention/wos/*.txt"
+      query: 'TS=(("extracellular vesicle*" OR exosome*) AND ("skeletal muscle" OR myoblast* OR "satellite cell*") AND (irradiat* OR radiat* OR injur* OR regenerat*))'
+      date: "2026-10-21"
+      note: "v0.2 经苏州大学 WebVPN 手动检索 WoS，新增 3 篇 B 级"
+    - id: cnki1
+      db: cnki
+      format: cnki
+      path: "inputs/ev-intervention/cnki/*.txt"
+      query: "(外泌体 OR 细胞外囊泡) AND (放射 OR 辐射 OR 放疗) AND (骨骼肌 OR 肌肉 OR 成肌细胞 OR 卫星细胞)"
+      note: "v0.1/v0.2 按用户要求未检索中文库；建议补检"
+
+screening:
+  triage_must: ['exosom|extracellular vesicle|small vesicle|\bsEVs?\b|secretome', 'muscle|myoblast|myogen|satellite cell|sarcopeni|cachexi|mdx|myotube']
+
+snowball:
+  backend: openalex
+  max_per_seed: 200
+  min_new: 3
+
+grades:
+  A:
+    zh: "A 辐射模型"
+    en: "A radiation model"
+    definition_zh: "辐射损伤肌肉/肌源细胞中的 EV 干预（或辐射致病 EV）直接证据"
+    definition_en: "EV intervention (or pathogenic radiation EV) measured directly in an irradiated muscle/muscle-cell model"
+  B:
+    zh: "B 其他损伤参照"
+    en: "B other-injury reference"
+    definition_zh: "非辐射损伤模型中的在体 EV 干预参照"
+    definition_en: "In vivo EV intervention in a non-radiation injury model"
+  C:
+    zh: "C 体外/候选"
+    en: "C in vitro / candidate"
+    definition_zh: "仅体外、摘要级、预印本或候选（含生物信息学预测）"
+    definition_en: "In vitro only, abstract-level, preprint or candidate (incl. in-silico prediction)"
+scaffold_rule: "研究缺口（如 在体辐射肌损伤 + 外源 EV + 功能终点）画骨架节点，不连证据边"
+
+atlas:
+  columns:
+    - {zh: "EV来源", en: "EV source"}
+    - {zh: "货物", en: "Cargo"}
+    - {zh: "靶点/信号", en: "Target / signal"}
+    - {zh: "细胞过程", en: "Cell process"}
+    - {zh: "组织结局", en: "Tissue outcome"}
+    - {zh: "功能结局", en: "Functional outcome"}
+  lanes:
+    - {id: rad, zh: "辐射模型（A级）与辐射致病EV", en: "Radiation models (grade A) & pathogenic radiation EV", color: "#d1475c"}
+    - {id: musc, zh: "MuSC增殖/分化 · 抗炎M2 · miRNA", en: "MuSC & M2 macrophage · miRNA", color: "#2a8fb0"}
+    - {id: atrophy, zh: "Akt/mTOR 合成代谢与 FoxO–UPS 抗萎缩", en: "Akt/mTOR anabolic & FoxO–UPS anti-atrophy", color: "#4a74c9"}
+    - {id: fibro, zh: "TGF-β/SMAD 抗纤维化与 FAP 命运", en: "TGF-β/SMAD anti-fibrosis & FAP fate", color: "#b07d2a"}
+    - {id: vasc, zh: "血管新生", en: "Angiogenesis", color: "#13907d"}
+    - {id: death, zh: "细胞死亡 · 线粒体/抗氧化", en: "Cell death · mitochondria / antioxidant", color: "#7a52c9"}
+    - {id: mem, zh: "膜修复与其他机制", en: "Membrane repair & other", color: "#2f9b74"}
+
+report:
+  language: zh
+  not_searched_note: "Scopus、Embase 未订阅，未检索；中文数据库按要求未检索；bioRxiv/medRxiv 2024–2026 只扫描约 30%（限流）。"

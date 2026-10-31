@@ -1,0 +1,498 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://github.com/TUANZIDING/MechAtlas/schema/registry-v0.1.schema.json",
+ "title": "MechAtlas mechanism registry v0.1",
+ "description": "Nodes (in lanes and columns), evidence edges and source cards; rendered into the atlas HTML by scripts/build-atlas-v0.1.mjs.",
+ "type": "object",
+ "required": [
+  "version",
+  "title",
+  "grades",
+  "cols",
+  "rows",
+  "lanes",
+  "nodes",
+  "edges",
+  "sources"
+ ],
+ "properties": {
+  "schema": {
+   "type": "string"
+  },
+  "version": {
+   "type": "string"
+  },
+  "generated": {
+   "type": "string"
+  },
+  "title": {
+   "type": "object",
+   "properties": {
+    "zh": {
+     "type": "string"
+    },
+    "en": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": true
+  },
+  "subtitle": {
+   "type": "object",
+   "properties": {
+    "zh": {
+     "type": "string"
+    },
+    "en": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": true
+  },
+  "topic": {
+   "type": "string"
+  },
+  "focusNode": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "description": "node drawn with a halo (e.g. the exposure)"
+  },
+  "grades": {
+   "type": "object",
+   "required": [
+    "A",
+    "B",
+    "C"
+   ],
+   "additionalProperties": {
+    "type": "object",
+    "required": [
+     "zh",
+     "en",
+     "definition"
+    ],
+    "properties": {
+     "zh": {
+      "type": "string"
+     },
+     "en": {
+      "type": "string"
+     },
+     "definition": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     }
+    }
+   }
+  },
+  "cols": {
+   "type": "array",
+   "minItems": 2,
+   "items": {
+    "type": "object",
+    "properties": {
+     "zh": {
+      "type": "string"
+     },
+     "en": {
+      "type": "string"
+     }
+    },
+    "additionalProperties": true
+   },
+   "description": "causal layers left->right; node.c indexes this array"
+  },
+  "rows": {
+   "type": "number",
+   "description": "total height in row units"
+  },
+  "scaffoldTop": {
+   "type": "number"
+  },
+  "lanes": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "zh",
+     "en",
+     "r0",
+     "r1"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][\\w-]*$"
+     },
+     "zh": {
+      "type": "string"
+     },
+     "en": {
+      "type": "string"
+     },
+     "color": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{3,6}$"
+     },
+     "r0": {
+      "type": "number"
+     },
+     "r1": {
+      "type": "number"
+     }
+    }
+   }
+  },
+  "nodes": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "status",
+     "label",
+     "c",
+     "r"
+    ],
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "type": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "evidence",
+       "scaffold"
+      ],
+      "description": "scaffold = conflicting or hypothesis-only; never carries edges"
+     },
+     "label": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "sub": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "c": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "r": {
+      "type": "number"
+     },
+     "externalIds": {
+      "type": "object",
+      "description": "e.g. {\"HGNC\":\"6018\",\"UniProt\":\"P05019\"}"
+     }
+    }
+   }
+  },
+  "edges": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "source",
+     "target",
+     "direction",
+     "grade",
+     "causal",
+     "refs",
+     "model",
+     "limitation"
+    ],
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "source": {
+      "type": "string"
+     },
+     "target": {
+      "type": "string"
+     },
+     "direction": {
+      "type": "string",
+      "enum": [
+       "+",
+       "-"
+      ],
+      "description": "+ activates/increases, - inhibits/decreases (drawn as a bar)"
+     },
+     "grade": {
+      "type": "string",
+      "enum": [
+       "A",
+       "B",
+       "C"
+      ]
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "direct",
+       "pharmacology",
+       "genetic",
+       "observed",
+       "candidate",
+       "association"
+      ]
+     },
+     "causal": {
+      "type": "boolean",
+      "description": "true only if a causal test (knockout, inhibitor, rescue, antagomiR...) was done"
+     },
+     "label": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "string"
+      },
+      "description": "source ids; every source must be an included study"
+     },
+     "model": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "dose": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "time": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "method": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "functional": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "limitation": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     }
+    }
+   }
+  },
+  "sources": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "title"
+    ],
+    "anyOf": [
+     {
+      "required": [
+       "pmid"
+      ]
+     },
+     {
+      "required": [
+       "doi"
+      ]
+     }
+    ],
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "pmid": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "pattern": "^\\d{1,9}$"
+     },
+     "doi": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "pattern": "^10\\."
+     },
+     "journal": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "year": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "title": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "reviewDepth": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     },
+     "abstractOnly": {
+      "type": "boolean"
+     },
+     "model": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "additionalProperties": true
+     }
+    }
+   }
+  },
+  "links": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "url"
+    ],
+    "properties": {
+     "url": {
+      "type": "string",
+      "pattern": "^https?://"
+     },
+     "zh": {
+      "type": "string"
+     },
+     "en": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "changelog": {
+   "type": "object",
+   "properties": {
+    "zh": {
+     "type": "string"
+    },
+    "en": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": true
+  }
+ }
+}

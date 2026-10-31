@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="MechAtlas 演示 · EV 干预骨骼肌损伤（节选）：交互式信号通路证据图（A/B/C 分级，9 篇纳入研究）">
+<meta name="generator" content="MechAtlas v0.1 (https://github.com/TUANZIDING/MechAtlas)">
+<title>MechAtlas 演示 · EV 干预骨骼肌损伤（节选） · demo-v0.1</title>
+<style>
+:root{
+ --bg:#f6f8fb;--card:#ffffff;--line:#e3e8f0;--line2:#d5dde8;--ink:#1d2b3a;--muted:#5d6b7c;--faint:#93a0b1;
+ --A:#0e9f8e;--B:#3d7fe0;--C:#8a5cf0;--scaf:#a9b4c3;--rad:#e8594a;
+ --shadow:0 1px 2px rgba(23,43,77,.06),0 6px 18px rgba(23,43,77,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Inter","PingFang SC","Microsoft YaHei","Noto Sans CJK SC","WenQuanYi Micro Hei",sans-serif;overflow:hidden}
+a{color:var(--B);text-decoration:none}
+button{font:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line2);border-radius:9px;padding:6px 12px;cursor:pointer;transition:.15s}
+button:hover{border-color:#9fb4d0;background:#f3f7fd}
+button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+header{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;gap:16px;padding:0 22px;background:rgba(255,255,255,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(10px);z-index:30}
+.logo{display:flex;align-items:center;gap:12px}
+.logo .orb{width:32px;height:32px;border-radius:10px;background:conic-gradient(from 210deg,#0e9f8e,#3d7fe0,#8a5cf0,#e8594a,#0e9f8e);box-shadow:0 4px 12px rgba(61,127,224,.25);position:relative}
+.logo .orb::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}
+.logo>div:last-child{min-width:0}
+.logo b{font-size:15px;letter-spacing:.3px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:min(520px,38vw)}
+.logo small{display:block;font-size:9px;letter-spacing:2.4px;color:var(--faint)}
+#hdrStats{letter-spacing:.3px;font-size:10.5px;color:#6b7a8c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:min(520px,38vw)}
+.toolbar{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.legend{display:flex;gap:14px;margin:0 8px;font-size:11.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.dot{width:22px;height:0;border-top:2.5px solid var(--A);border-radius:2px}
+.legend .b .dot{border-color:var(--B)} .legend .c .dot{border-color:var(--C);border-top-style:dashed}
+.legend .s .dot{border-color:var(--scaf);border-top-style:dotted}
+#stage{position:absolute;inset:64px 360px 0 0;background:radial-gradient(circle at 1px 1px,#dfe5ee 1px,transparent 1.2px) 0 0/22px 22px,var(--bg)}
+#svg{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+#svg.grab{cursor:grabbing}
+.lane{stroke:none}
+.lane-label{font-size:12px;letter-spacing:2.5px;font-weight:700}
+.map-stats{fill:#5d6b7c;font-size:12.5px;font-weight:600;letter-spacing:.3px}
+.col-label{fill:var(--faint);font-size:10.5px;letter-spacing:1.8px;text-anchor:middle;font-weight:600}
+.col-rule{stroke:#d9e0ea;stroke-dasharray:2 6}
+.edge path.hit{stroke:transparent;stroke-width:22;fill:none;pointer-events:stroke;cursor:pointer}
+.edge path.wire{fill:none;stroke:var(--B);stroke-width:1.9;opacity:.75;transition:opacity .2s}
+.edge.gA path.wire{stroke:var(--A);stroke-width:2.2;opacity:.85}
+.edge.gC path.wire{stroke:var(--C);stroke-dasharray:7 6}
+.edge .flow{fill:none;stroke:var(--A);stroke-width:3.2;stroke-dasharray:2 28;stroke-linecap:round;opacity:.55;pointer-events:none}
+.edge.gB .flow{stroke:var(--B)}.edge.gC .flow{stroke:var(--C)}
+.edge.dim{opacity:.08}
+.edge.sel path.wire{stroke-width:3.6;opacity:1}
+.edge-badge text{font-size:9.5px;font-weight:700;fill:#516276}
+.edge-badge rect{fill:#fff;stroke:var(--line2)}
+.node{cursor:pointer;transition:opacity .2s}
+.node .body{fill:#fff;stroke:var(--line2);stroke-width:1;filter:drop-shadow(0 2px 3px rgba(23,43,77,.08)) drop-shadow(0 8px 14px rgba(23,43,77,.06))}
+.node:hover .body{stroke:#9fb4d0}
+.node.scaf .body{fill:#f8f9fb;stroke:var(--scaf);stroke-dasharray:5 4;filter:none}
+.node .tt{fill:var(--ink);font-size:12.5px;font-weight:650;text-anchor:middle}
+.node .st{fill:var(--muted);font-size:9.5px;text-anchor:middle}
+.node .pend{fill:#98a3b3;font-size:8.5px;letter-spacing:1px;text-anchor:middle}
+.node.scaf .tt{fill:#7d8898;font-weight:550}
+.node .grades{font-size:8.5px;font-weight:700}
+.node.sel .body{stroke:var(--ink);stroke-width:2}
+.node.dim{opacity:.25}
+.lang-en .node .tt{font-size:11.5px}
+#side{position:fixed;top:64px;right:0;bottom:0;width:360px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;z-index:20}
+#side .pad{padding:20px 20px 40px;overflow:auto}
+.stat-chip{display:inline-block;margin:0 auto 14px;padding:6px 12px;border-radius:20px;background:#f1f5fb;border:1px solid var(--line);color:#3c4d61;font-size:11.5px;line-height:1.6;font-weight:600}
+.empty{color:var(--faint);text-align:center;margin-top:70px;line-height:2;font-size:12.5px}
+.badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.badge{font-size:10.5px;padding:3px 10px;border-radius:20px;background:#f1f4f8;color:var(--muted);font-weight:600}
+.badge.gA{background:#e3f6f3;color:#0b7f72}.badge.gB{background:#e8f0fd;color:#2b64bb}.badge.gC{background:#f0eafe;color:#6c43cc}.badge.scaf{background:#f1f3f6;color:#7d8898}
+h2.sel-title{font-size:18px;margin:4px 0 4px;line-height:1.4}
+.sel-sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+.rel{border-top:1px solid var(--line);padding:13px 0}
+.rel .rel-h .badge{white-space:nowrap;flex:none}
+.rel .rel-h{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin-bottom:8px}
+.rel .rel-h b{color:var(--ink);font-size:12.5px}
+dl{margin:0}dl div{display:grid;grid-template-columns:66px 1fr;gap:8px;padding:3px 0}
+dt{color:var(--faint);font-size:11px}dd{margin:0;font-size:12px;line-height:1.65}
+.limit{background:#fdf6e7;border-left:3px solid #e0a83a;color:#7a5a17;padding:8px 11px;border-radius:6px;font-size:11.5px;margin-top:8px;line-height:1.65}
+.refs a{display:block;font-size:11.5px;padding:8px 10px;background:#f6f8fb;border-radius:8px;margin-top:6px;border:1px solid var(--line)}
+.refs a:hover{border-color:#b9cbe6}
+.refs small{color:var(--faint);display:block;margin-top:2px}
+.badge.causal{background:#fdeee9;color:#b5482b}.badge.assoc{background:#f1f4f8;color:#6b7a8c}.badge.abs{background:#fff4dd;color:#946200}
+.toolbar a.lnk{font-size:12px;padding:6px 10px;border:1px solid var(--line2);border-radius:9px;color:var(--muted);background:#fff;white-space:nowrap}
+.toolbar a.lnk:hover{border-color:#9fb4d0;color:var(--ink)}
+.links{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}.links a{font-size:12px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#f8fafc}
+.scaf-note{background:#f6f7f9;border:1px dashed var(--scaf);border-radius:9px;padding:11px;font-size:12px;color:#5d6b7c;line-height:1.7}
+footer{position:fixed;left:0;bottom:0;width:calc(100% - 360px);padding:7px 20px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--faint);background:rgba(255,255,255,.9);border-top:1px solid var(--line);display:flex;gap:16px;z-index:15}
+dialog{width:min(820px,94vw);max-height:86vh;overflow:auto;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(23,43,77,.2)}
+dialog::backdrop{background:rgba(29,43,58,.35);backdrop-filter:blur(3px)}
+.srcgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.srccard a{display:block;border:1px solid var(--line);border-radius:10px;padding:10px;background:#f8fafc;font-size:12px}
+.srccard small{display:block;color:var(--faint)}
+.hint{position:absolute;left:14px;bottom:44px;font-size:10.5px;color:var(--muted);background:#fff;padding:5px 10px;border-radius:7px;border:1px solid var(--line);box-shadow:var(--shadow);pointer-events:none}
+body.poster #side,body.poster footer,body.poster .toolbar button,body.poster .hint,body.poster .toolbar a{display:none}
+body.poster #stage{inset:64px 0 0 0}
+body.poster .legend{font-size:13px}
+@media(max-width:860px){
+ #side{position:fixed;inset:auto 0 0 0;top:auto;width:100%;height:46%;border-left:0;border-top:1px solid var(--line)}
+ #stage{inset:64px 0 46% 0}footer{display:none}.legend{display:none}
+ header{gap:10px;padding:0 10px}.logo>div:last-child{display:none}.logo .orb{width:26px;height:26px;flex:none}
+ .toolbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;min-width:0}.toolbar::-webkit-scrollbar{display:none}.toolbar button{white-space:nowrap;padding:6px 10px;font-size:12px}.hint{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo"><div class="orb"></div><div><b data-i="title"></b><small id="hdrStats"></small></div></div>
+ <div class="toolbar">
+  <div class="legend">
+   <span><i class="dot"></i><span data-i="lA"></span></span>
+   <span class="b"><i class="dot"></i><span data-i="lB"></span></span>
+   <span class="c"><i class="dot"></i><span data-i="lC"></span></span>
+  </div>
+  <button id="fLax" data-f="all" class="on" data-i="fAll">全部</button>
+  <button id="fA" data-f="A">A</button><button id="fB" data-f="B">B</button><button id="fC" data-f="C">C</button>
+  <button id="zIn" aria-label="zoom in">＋</button><button id="zOut" aria-label="zoom out">－</button>
+  <button id="fFit">⤢ <span data-i="fit">适配</span></button>
+  <button id="fSrc" data-i="src">文献</button>
+  <button id="fLang">EN</button>
+ </div>
+</header>
+<div id="stage"><svg id="svg"></svg><div class="hint" data-i="hint"></div></div>
+<aside id="side"><div class="pad" id="inspector"><div class="empty"></div></div></aside>
+<footer><span data-i="foot1"></span><span data-i="foot2"></span></footer>
+<dialog id="srcDlg"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0" data-i="srcTitle">文献与方法</h2><button id="srcClose">✕</button></div><p style="color:var(--muted);font-size:12px" data-i="srcMethod"></p><div class="srcgrid" id="srcGrid"></div></dialog>
+<script>
+const DATA={"version":"demo-v0.1","versionLabel":"demo-v0.1","generated":"2026-11-01","title":{"zh":"MechAtlas 演示 · EV 干预骨骼肌损伤（节选）","en":"MechAtlas demo · EV intervention in skeletal muscle injury (subset)"},"subtitle":{"zh":"节选自 EV 干预通路图 v0.2 的 13 条证据关系、9 篇真实文献","en":"13 relations and 9 real papers excerpted from the EV intervention map v0.2"},"changelog":{"zh":"demo-v0.1：从 EV 干预通路图 v0.2 节选 4 个机制泳道 + 1 个缺口泳道，用 MechAtlas 通用模板重新渲染。","en":"demo-v0.1: 4 mechanism lanes + 1 gap lane excerpted from the EV map v0.2, re-rendered with the generic MechAtlas template."},"grades":{"A":{"zh":"A 辐射模型","en":"A radiation model","definition":{"zh":"辐射损伤肌肉/肌源细胞中的 EV 干预直接证据","en":"EV intervention measured directly in an irradiated muscle/muscle-cell model"}},"B":{"zh":"B 其他损伤参照","en":"B other-injury ref","definition":{"zh":"非辐射损伤模型中的在体 EV 干预参照","en":"In vivo EV intervention in a non-radiation injury model"}},"C":{"zh":"C 体外/候选","en":"C in vitro / candidate","definition":{"zh":"仅体外、摘要级或候选（含生物信息学预测）","en":"In vitro only, abstract-level or candidate (incl. in-silico prediction)"}}},"stats":{"included":9,"A":2,"B":7,"C":0,"sources":9,"nodes":22,"relations":13,"drawn":13,"scaffold":3,"abstractOnly":3},"lanes":[{"id":"rad","zh":"辐射模型（A级）","en":"Radiation models (A)","color":"#d1475c","r0":-0.43,"r1":3.993},{"id":"musc","zh":"MuSC · M2巨噬细胞","en":"MuSC · M2 macrophage","color":"#2a8fb0","r0":4.02,"r1":6.543},{"id":"fibro","zh":"FAP-EV · miR-206","en":"FAP-EV · miR-206","color":"#b07d2a","r0":6.57,"r1":8.143},{"id":"death","zh":"细胞死亡 · 焦亡","en":"Cell death · pyroptosis","color":"#7a52c9","r0":8.17,"r1":10.693},{"id":"gap","zh":"研究缺口","en":"Gaps","color":"#8a97a8","r0":10.72,"r1":12.293}],"cols":[{"zh":"EV来源","en":"EV source"},{"zh":"货物","en":"Cargo"},{"zh":"靶点/信号","en":"Target / signal"},{"zh":"细胞过程","en":"Cell process"},{"zh":"组织结局","en":"Tissue outcome"},{"zh":"功能结局","en":"Functional outcome"}],"rows":12.293,"scaffoldTop":12.293,"focusNode":null,"links":[{"zh":"辐射肌损伤通路图谱 v0.7（完整）","en":"Radiation muscle atlas v0.7 (full)","url":"https://tuanziding.github.io/radiation-muscle-pathway/"},{"zh":"EV 干预通路图 v0.2（完整）","en":"EV intervention map v0.2 (full)","url":"https://tuanziding.github.io/radiation-muscle-pathway/ev-intervention-v0.2.html"},{"zh":"GitHub","en":"GitHub","url":"https://github.com/TUANZIDING/MechAtlas"}],"nodes":[{"id":"mpcEV","type":"ev-source","status":"evidence","label":{"zh":"非照射 MPC-EV","en":"Non-irradiated MPC-EV"},"sub":{"zh":"大鼠肌前体细胞","en":"rat muscle precursor"},"c":0,"r":0},{"id":"radMPC","type":"cell-process","status":"evidence","label":{"zh":"受照MPC活力/增殖 ↑","en":"Irradiated MPC viability/proliferation ↑"},"sub":{"zh":"10 Gy X线","en":"10 Gy X-ray"},"c":3,"r":0},{"id":"radEndo","type":"cell-process","status":"evidence","label":{"zh":"内皮成管/微血管密度 ↑","en":"Endothelial tube / microvessel density ↑"},"sub":{"zh":"HUVEC体外","en":"HUVEC in vitro"},"c":4,"r":0.95},{"id":"radEVsrc","type":"ev-source","status":"evidence","label":{"zh":"受照MPC-EV（Rad-EV）","en":"Irradiated MPC-EV (Rad-EV)"},"sub":{"zh":"促血管活性丧失","en":"loses pro-angiogenic activity"},"c":0,"r":1.9},{"id":"radMiR","type":"cargo","status":"evidence","label":{"zh":"Rad-EV miRNA谱改变","en":"Rad-EV miRNA profile shift"},"sub":{"zh":"13↓/7↑ (miR-206↓等)","en":"13 down / 7 up"},"c":1,"r":1.9},{"id":"radPred","type":"target","status":"evidence","label":{"zh":"预测靶：VEGF/PI3K-Akt/FoxO","en":"Predicted targets: VEGF/PI3K-Akt/FoxO"},"sub":{"zh":"仅生物信息学预测","en":"bioinformatic prediction only"},"c":2,"r":1.9},{"id":"myomixEV","type":"ev-source","status":"evidence","label":{"zh":"Myo-MIX转染MSC外泌体","en":"Myo-MIX-transfected MSC exosome"},"sub":{"zh":"MyoD/MyoG/Myf6","en":"MyoD/MyoG/Myf6"},"c":0,"r":2.85},{"id":"esoMyo","type":"outcome","status":"evidence","label":{"zh":"放射性食管炎修复","en":"Radiation oesophagitis repair"},"sub":{"zh":"再生↑ · 纤维化↓ · 10 Gy×2","en":"regeneration ↑ · fibrosis ↓ · 10 Gy×2"},"c":4,"r":2.85},{"id":"mscEV","type":"ev-source","status":"evidence","label":{"zh":"MSC-EV","en":"MSC-EV"},"sub":{"zh":"骨髓/脂肪/脐带 · 最常用来源","en":"BM / adipose / UC · most common source"},"c":0,"r":4.45},{"id":"mac2","type":"cell-process","status":"evidence","label":{"zh":"巨噬细胞 M1→M2 极化","en":"Macrophage M1→M2 polarization"},"sub":{"zh":"Arg1/CD206↑, NF-κB↓","en":"Arg1/CD206↑"},"c":3,"r":4.45},{"id":"scProlif","type":"cell-process","status":"evidence","label":{"zh":"MuSC 激活/增殖/分化 ↑","en":"MuSC activation/proliferation/differentiation ↑"},"sub":{"zh":"增殖/分化/融合","en":"proliferation/differentiation/fusion"},"c":4,"r":5.4},{"id":"regen","type":"outcome","status":"evidence","label":{"zh":"再生 ↑","en":"Regeneration ↑"},"sub":{"zh":"中央核 · eMyHC · CSA","en":"central nuclei · eMyHC · CSA"},"c":5,"r":5.4},{"id":"hdacFap","type":"ev-source","status":"evidence","label":{"zh":"HDACi处理的mdx/DMD FAP-EV","en":"HDACi-exposed mdx/DMD FAP-EV"},"sub":{"zh":"肌内移植 · mdx","en":"intramuscular · mdx"},"c":0,"r":7},{"id":"mir206","type":"cargo","status":"evidence","label":{"zh":"EV miR-206 ↑","en":"EV miR-206 ↑"},"sub":{"zh":"协同miR簇 · antagomiR-206可阻断","en":"cooperative miRs · antagomiR-206 blocks"},"c":1,"r":7},{"id":"muscExp","type":"cell-process","status":"evidence","label":{"zh":"MuSC 激活/扩增 ↑","en":"MuSC activation / expansion ↑"},"sub":{"zh":"ex vivo + 在体","en":"ex vivo + in vivo"},"c":3,"r":7},{"id":"mdxFib","type":"outcome","status":"evidence","label":{"zh":"mdx 再生↑ · 纤维化/炎症↓","en":"mdx regeneration ↑ · fibrosis / inflammation ↓"},"sub":{"zh":"肌内EV移植","en":"intramuscular EV transplant"},"c":5,"r":7},{"id":"esExo","type":"ev-source","status":"evidence","label":{"zh":"胚胎干细胞外泌体 ES-Exo","en":"Embryonic stem cell exosome (ES-Exo)"},"sub":{"zh":"对照 MEF-Exo 无效","en":"MEF-Exo control ineffective"},"c":0,"r":8.6},{"id":"doxOut","type":"outcome","status":"evidence","label":{"zh":"化疗肌毒性 ↓","en":"Chemotherapy myotoxicity ↓"},"sub":{"zh":"萎缩/纤维化↓ · 功能↑ · 多柔比星","en":"atrophy/fibrosis ↓ · function ↑ · doxorubicin"},"c":5,"r":8.6},{"id":"pyro","type":"signaling","status":"evidence","label":{"zh":"NLRP3焦亡/GSDME ↓","en":"NLRP3 pyroptosis / GSDME ↓"},"sub":{"zh":"TLR4/ASC/caspase-1/IL-1β","en":"TLR4/ASC/caspase-1/IL-1β"},"c":2,"r":9.55},{"id":"gapInvivo","type":"gap","status":"scaffold","label":{"zh":"在体辐射肌损伤 + 外源EV + 功能终点","en":"In vivo irradiated muscle + exogenous EV + functional endpoint"},"sub":{"zh":"0 篇（截至 v0.2）","en":"0 studies (as of v0.2)"},"c":0,"r":11.15},{"id":"gapFap","type":"gap","status":"scaffold","label":{"zh":"辐射 FAP-EV 与纤维化","en":"Radiation FAP-EV & fibrosis"},"sub":{"zh":"仅 mdx 证据，未在辐射验证","en":"mdx only; untested after radiation"},"c":2,"r":11.15},{"id":"gapSting","type":"gap","status":"scaffold","label":{"zh":"EV 与 cGAS–STING","en":"EV & cGAS–STING"},"sub":{"zh":"假说，无直接研究","en":"hypothesis only"},"c":4,"r":11.15}],"edges":[{"key":"mpcEV>radMPC","source":"mpcEV","target":"radMPC","items":[{"id":"EA1","grade":"A","kind":"direct","causal":true,"sign":"+","label":{"zh":"提升活力52→71%、BrdU +16%","en":"viability 52→71%, BrdU +16%"},"refs":["P40835994"],"model":{"zh":"受照大鼠MPC","en":"irradiated rat MPC"},"doseText":{"zh":"25–75 µg蛋白/孔","en":"25–75 µg protein/well"},"time":{"zh":"48–72 h","en":"48–72 h"},"method":{"zh":"活力/BrdU","en":"viability/BrdU"},"functional":{"zh":"增殖恢复","en":"proliferation"},"limitation":{"zh":"纯体外；无在体、无功能学终点。","en":"In vitro only; no in vivo or functional endpoint."}}],"grade":"A","inhibit":false,"ids":["EA1"]},{"key":"mpcEV>radEndo","source":"mpcEV","target":"radEndo","items":[{"id":"EA2","grade":"A","kind":"direct","causal":true,"sign":"+","label":{"zh":"HUVEC成管+1.5×、微血管密度+3×","en":"HUVEC tubes +1.5×, microvessel +3×"},"refs":["P40835994"],"model":{"zh":"HUVEC/微血管凝胶","en":"HUVEC / microvessel gel"},"doseText":{"zh":"25–75 µg蛋白","en":"25–75 µg protein"},"time":{"zh":"24 h / d7–8","en":"24 h / d7–8"},"method":{"zh":"成管/微血管碎片","en":"tube/MVF assay"},"functional":{"zh":"血管读出","en":"angiogenic readout"},"limitation":{"zh":"体外；受照来源EV(Rad-EV)无此活性。","en":"In vitro; Rad-EV lacks this activity."}}],"grade":"A","inhibit":false,"ids":["EA2"]},{"key":"radEVsrc>radMiR","source":"radEVsrc","target":"radMiR","items":[{"id":"EA3","grade":"A","kind":"observed","causal":false,"sign":"+","label":{"zh":"Rad-EV miRNA 13↓/7↑","en":"Rad-EV miRNA 13 down / 7 up"},"refs":["P40835994"],"model":{"zh":"受照MPC条件EV","en":"irradiated MPC EV"},"doseText":{"zh":"—","en":"—"},"time":{"zh":"48 h","en":"48 h"},"method":{"zh":"nCounter","en":"nCounter"},"functional":{"zh":"miR-206/let-7b/miR-34a/miR-499/miR-132↓","en":"miR-206/let-7b/miR-34a/miR-499/miR-132 down"},"limitation":{"zh":"下游通路仅生信预测，未功能验证。","en":"Downstream pathways predicted in silico only."}}],"grade":"A","inhibit":false,"ids":["EA3"]},{"key":"radMiR>radPred","source":"radMiR","target":"radPred","items":[{"id":"EA4","grade":"C","kind":"candidate","causal":false,"sign":"+","label":{"zh":"预测靶VEGF/PI3K-Akt/FoxO（仅生信）","en":"predicted VEGF/PI3K-Akt/FoxO (in silico)"},"refs":["P40835994"],"model":{"zh":"同上","en":"same"},"doseText":{"zh":"—","en":"—"},"time":{"zh":"—","en":"—"},"method":{"zh":"靶点预测","en":"target prediction"},"functional":{"zh":"候选","en":"candidate"},"limitation":{"zh":"降级为C：无功能验证；候选miRNA需逐一验证。","en":"Downgraded to C: no functional validation."}}],"grade":"C","inhibit":false,"ids":["EA4"]},{"key":"myomixEV>esoMyo","source":"myomixEV","target":"esoMyo","items":[{"id":"EA5","grade":"A","kind":"direct","causal":true,"sign":"+","label":{"zh":"Mrf4/Myf5/Myogenin↑，胶原↓，CD68↓","en":"Mrf4/Myf5/Myogenin↑, collagen↓, CD68↓"},"refs":["P41936013"],"model":{"zh":"放射性食管炎在体","en":"radiation esophagitis in vivo"},"doseText":{"zh":"未报告","en":"not reported"},"time":{"zh":"4 周","en":"4 weeks"},"method":{"zh":"组化/qPCR","en":"histology/qPCR"},"functional":{"zh":"再生↑/纤维化↓","en":"regen↑/fibrosis↓"},"limitation":{"zh":"靶器官以平滑肌为主；无剂量、无肌力终点。","en":"Target is largely smooth muscle; no dose or force endpoint."}}],"grade":"A","inhibit":false,"ids":["EA5"]},{"key":"mscEV>mac2","source":"mscEV","target":"mac2","items":[{"id":"EM1","grade":"B","kind":"pharmacology","causal":true,"sign":"+","label":{"zh":"M1→M2（Arg1/CD206↑, IL6/Nos2↓）","en":"M1→M2 (Arg1/CD206↑, IL6/Nos2↓)"},"refs":["P28186708","P33323007","P37964317"],"model":{"zh":"CTX/挫伤/VML","en":"CTX/contusion/VML"},"doseText":{"zh":"1–100 µg","en":"1–100 µg"},"time":{"zh":"d1–d7","en":"d1–d7"},"method":{"zh":"流式/组化","en":"flow/histology"},"functional":{"zh":"炎症消退","en":"inflammation resolution"},"limitation":{"zh":"非辐射模型；巨噬细胞清除证实依赖性。","en":"Non-radiation models; macrophage depletion confirms dependence."}}],"grade":"B","inhibit":false,"ids":["EM1"]},{"key":"mac2>scProlif","source":"mac2","target":"scProlif","items":[{"id":"EM2","grade":"B","kind":"observed","causal":false,"sign":"+","label":{"zh":"M2环境支持MuSC增殖分化","en":"M2 milieu supports MuSC"},"refs":["P33323007","P37964317"],"model":{"zh":"同上","en":"same"},"doseText":{"zh":"—","en":"—"},"time":{"zh":"d3–d7","en":"d3–d7"},"method":{"zh":"组化","en":"histology"},"functional":{"zh":"再生","en":"regeneration"},"limitation":{"zh":"非辐射模型。","en":"Non-radiation models."}}],"grade":"B","inhibit":false,"ids":["EM2"]},{"key":"scProlif>regen","source":"scProlif","target":"regen","items":[{"id":"EM6","grade":"B","kind":"observed","causal":false,"sign":"+","label":{"zh":"再生↑：中央核/eMyHC/CSA","en":"regeneration↑: central nuclei/eMyHC/CSA"},"refs":["P38442155","P33323007","P42823972"],"model":{"zh":"多模型","en":"multiple"},"doseText":{"zh":"—","en":"—"},"time":{"zh":"d7–d28","en":"d7–d28"},"method":{"zh":"组化","en":"histology"},"functional":{"zh":"再生","en":"regen"},"limitation":{"zh":"非辐射模型。","en":"Non-radiation."}}],"grade":"B","inhibit":false,"ids":["EM6"]},{"key":"hdacFap>mir206","source":"hdacFap","target":"mir206","items":[{"id":"EF7","grade":"B","kind":"direct","causal":true,"sign":"+","label":{"zh":"HDACi提高FAP-EV中miR-206等一组miR","en":"HDACi raises miR-206 and a miR subset in FAP-EVs"},"refs":["P32754983"],"model":{"zh":"mdx小鼠与DMD患者FAP","en":"FAPs from mdx mice and DMD patients"},"doseText":{"zh":"HDACi暴露后收集EV","en":"EVs collected after HDACi exposure"},"time":{"zh":"摘要未报告","en":"not reported in abstract"},"method":{"zh":"EV miRNA谱；EV介导miR向MuSC转移","en":"EV miRNA profiling; EV-mediated miR transfer to MuSCs"},"functional":{"zh":"EV货物改变","en":"EV cargo shift"},"limitation":{"zh":"非辐射（营养不良模型）；货物变化依赖HDACi预处理。","en":"Non-radiation (dystrophy); cargo change depends on HDACi exposure."}}],"grade":"B","inhibit":false,"ids":["EF7"]},{"key":"mir206>muscExp","source":"mir206","target":"muscExp","items":[{"id":"EF8","grade":"B","kind":"direct","causal":true,"sign":"+","label":{"zh":"miR-206是EV诱导MuSC扩增与再生所必需（antagomiR阻断）","en":"miR-206 required for EV-induced MuSC expansion and regeneration (antagomiR)"},"refs":["P32754983"],"model":{"zh":"mdx小鼠；MuSC ex vivo","en":"mdx mice; MuSCs ex vivo"},"doseText":{"zh":"肌内EV移植","en":"intramuscular EV transplantation"},"time":{"zh":"摘要未报告","en":"not reported in abstract"},"method":{"zh":"antagomiR逐一阻断单个miR","en":"antagomiR blockade of individual miRs"},"functional":{"zh":"MuSC激活/扩增","en":"MuSC activation/expansion"},"limitation":{"zh":"非辐射；因果检验较强（antagomiR-206），但净效应来自多miR协同。","en":"Non-radiation; strong causal test (antagomiR-206), but the net effect comes from cooperating miRs."}}],"grade":"B","inhibit":false,"ids":["EF8"]},{"key":"muscExp>mdxFib","source":"muscExp","target":"mdxFib","items":[{"id":"EF9","grade":"B","kind":"observed","causal":false,"sign":"+","label":{"zh":"再生↑，纤维化与炎症↓","en":"regeneration ↑, fibrosis and inflammation ↓"},"refs":["P32754983"],"model":{"zh":"mdx小鼠","en":"mdx mice"},"doseText":{"zh":"肌内EV移植","en":"intramuscular EV transplantation"},"time":{"zh":"摘要未报告","en":"not reported in abstract"},"method":{"zh":"组织学（再生/纤维化/炎症）","en":"histology (regeneration/fibrosis/inflammation)"},"functional":{"zh":"组织学改善","en":"histological improvement"},"limitation":{"zh":"v0.1误排除（标为“无EV干预”），v0.2按摘要更正纳入；与辐射FAP纤维化缺口直接相关，但未在辐射模型验证。","en":"Wrongly excluded in v0.1 (\"no EV intervention\"); corrected in v0.2 from the abstract. Directly relevant to the radiation FAP-fibrosis gap but untested in radiation."}}],"grade":"B","inhibit":false,"ids":["EF9"]},{"key":"esExo>pyro","source":"esExo","target":"pyro","items":[{"id":"ED10","grade":"B","kind":"direct","causal":true,"sign":"-","label":{"zh":"ES-Exo → TLR4/NLRP3/ASC/caspase-1/IL-1β/IL-18 ↓（焦亡↓）","en":"ES-Exo → TLR4/NLRP3/ASC/caspase-1/IL-1β/IL-18 ↓ (pyroptosis ↓)"},"refs":["P33316945"],"model":{"zh":"化疗（多柔比星）肌毒性，C57BL/6J小鼠（10±2周）","en":"chemotherapy (doxorubicin) muscle toxicity, C57BL/6J mice (10±2 wk)"},"doseText":{"zh":"ES-Exo给药（剂量见原文）；MEF-Exo为阴性对照","en":"ES-Exo (dose in paper); MEF-Exo negative control"},"time":{"zh":"摘要未报告","en":"not reported in abstract"},"method":{"zh":"炎症小体/焦亡标志物；巨噬细胞表型","en":"inflammasome/pyroptosis markers; macrophage phenotype"},"functional":{"zh":"TNF-α/IL-6↓，M1↓/M2↑","en":"TNF-α/IL-6 ↓, M1 ↓ / M2 ↑"},"limitation":{"zh":"非辐射，但同为肿瘤治疗相关肌损伤；焦亡为关联，未用NLRP3/caspase-1抑制剂验证因果。","en":"Non-radiation but a cancer-therapy muscle injury; pyroptosis link is associative—no NLRP3/caspase-1 inhibitor causal test."}}],"grade":"B","inhibit":true,"ids":["ED10"]},{"key":"esExo>doxOut","source":"esExo","target":"doxOut","items":[{"id":"ED11","grade":"B","kind":"pharmacology","causal":true,"sign":"+","label":{"zh":"ES-Exo → 肌萎缩/纤维化↓、肌功能↑","en":"ES-Exo → atrophy/fibrosis ↓, muscle function ↑"},"refs":["P33316945"],"model":{"zh":"化疗（多柔比星）肌毒性，C57BL/6J小鼠（10±2周）","en":"chemotherapy (doxorubicin) muscle toxicity, C57BL/6J mice (10±2 wk)"},"doseText":{"zh":"ES-Exo给药；MEF-Exo对照无效","en":"ES-Exo; MEF-Exo control ineffective"},"time":{"zh":"摘要未报告","en":"not reported in abstract"},"method":{"zh":"肌功能、组织学","en":"muscle function, histology"},"functional":{"zh":"肌功能改善","en":"muscle function improved"},"limitation":{"zh":"非辐射；与放疗同属肿瘤治疗相关肌毒性，是最接近“治疗相关肌损伤+EV”的在体参照之一。","en":"Non-radiation; like radiotherapy a cancer-treatment myotoxicity—one of the closest in vivo references for therapy-related injury + EV."}}],"grade":"B","inhibit":false,"ids":["ED11"]}],"sources":{"P28186708":{"id":"P28186708","pmid":"28186708","doi":"10.1002/sctm.16-0363","journal":"Stem Cells Transl Med","year":2017,"title":{"zh":"MSC-EV促肌再生并调节炎症","en":"Mesenchymal Stem Cell-Derived Extracellular Vesicles as Mediators of Anti-Inflammatory Effects: Endorsement of Macrophage Polarization."},"reviewDepth":{"zh":"全文核查","en":"Full text reviewed"},"abstractOnly":false,"model":{"zh":"心脏毒素TA","en":"CTX TA"}},"P32754983":{"id":"P32754983","pmid":"32754983","doi":"10.15252/embr.202050863","journal":"EMBO Rep","year":2020,"title":{"zh":"HDAC抑制剂调控营养不良肌FAP-EV中的miRNA","en":"HDAC inhibitors tune miRNAs in extracellular vesicles of dystrophic muscle-resident mesenchymal cells."},"reviewDepth":{"zh":"摘要核查","en":"Abstract reviewed"},"abstractOnly":true,"model":{"zh":"mdx小鼠/DMD FAP","en":"mdx mice / DMD FAPs"}},"P33316945":{"id":"P33316945","pmid":"33316945","doi":"10.3390/ph13120450","journal":"Pharmaceuticals (Basel)","year":2020,"title":{"zh":"干细胞外泌体通过对抗焦亡改善多柔比星肌毒性","en":"Stem Cell-Derived Exosomes Ameliorate Doxorubicin-Induced Muscle Toxicity through Counteracting Pyroptosis."},"reviewDepth":{"zh":"摘要核查","en":"Abstract reviewed"},"abstractOnly":true,"model":{"zh":"多柔比星肌毒性小鼠","en":"doxorubicin myotoxicity mice"}},"P33323007":{"id":"P33323007","pmid":"33323007","doi":"10.1089/scd.2020.0167","journal":"Stem Cells Dev","year":2021,"title":{"zh":"MSC-EV经巨噬细胞介导促进肌再生","en":"Bone Marrow Stromal Cell-Derived Exosomes Promote Muscle Healing Following Contusion Through Macrophage Polarization."},"reviewDepth":{"zh":"摘要级核查","en":"Abstract-level review"},"abstractOnly":true,"model":{"zh":"挫伤/CTX","en":"contusion/CTX"}},"P37964317":{"id":"P37964317","pmid":"37964317","doi":"10.1186/s13287-023-03530-1","journal":"Stem Cell Res Ther","year":2023,"title":{"zh":"MSC-EV调控巨噬细胞促VML修复","en":"Extracellular vesicles derived from human ESC-MSCs target macrophage and promote anti-inflammation process, angiogenesis, and functional recovery in ACS-induced severe skeletal muscle injury."},"reviewDepth":{"zh":"全文核查","en":"Full text reviewed"},"abstractOnly":false,"model":{"zh":"VML","en":"VML"}},"P38442155":{"id":"P38442155","pmid":"38442155","doi":"10.1073/pnas.2316544121","journal":"Proc Natl Acad Sci U S A","year":2024,"title":{"zh":"FAP-EV miR-127-3p经S1PR3促成肌、miR-206/27抑制成脂","en":"Reciprocal communication between FAPs and muscle cells via distinct extracellular vesicle miRNAs in muscle regeneration."},"reviewDepth":{"zh":"全文核查","en":"Full text reviewed"},"abstractOnly":false,"model":{"zh":"BaCl2 TA","en":"BaCl2 TA"}},"P40835994":{"id":"P40835994","pmid":"40835994","doi":"10.1038/s41598-025-15699-x","journal":"Sci Rep","year":2025,"title":{"zh":"非照射肌前体细胞EV改善受照MPC与内皮功能","en":"Irradiation of muscle precursor cells impairs the proliferative and angiogenic functions of their extracellular vesicles."},"reviewDepth":{"zh":"全文核查","en":"Full text reviewed"},"abstractOnly":false,"model":{"zh":"10 Gy大鼠MPC体外","en":"10 Gy rat MPC in vitro"}},"P41936013":{"id":"P41936013","pmid":"41936013","doi":"10.1007/s13770-026-00795-4","journal":"Tissue Eng Regen Med","year":2026,"title":{"zh":"Myo-MIX工程MSC外泌体改善放射性食管炎肌再生","en":"Regenerative effects of myogenic gene transfected MSC derived exosomes on radiation esophagitis."},"reviewDepth":{"zh":"全文核查","en":"Full text reviewed"},"abstractOnly":false,"model":{"zh":"放射性食管炎10 Gy×2","en":"radiation esophagitis 10 Gy×2"}},"P42823972":{"id":"P42823972","pmid":"42823972","doi":"10.1016/j.omtn.2026.103087","journal":"Mol Ther Nucleic Acids","year":2026,"title":{"zh":"肌源sEV miR-193b-3p经AP2M1促VML成肌","en":"Myogenic differentiation-derived small extracellular vesicles as a therapeutic strategy for miR-193b-3p-mediated muscle regeneration."},"reviewDepth":{"zh":"全文核查","en":"Full text reviewed"},"abstractOnly":false,"model":{"zh":"VML TA","en":"VML TA"}}}};
+const S={lang:'zh',filter:'all',sel:null,k:1,tx:0,ty:0};
+const G=DATA.grades||{};const gl=(k,l)=>(G[k]&&G[k][l])||k;const gd=(k,l)=>(G[k]&&G[k].definition&&G[k].definition[l])||'';
+const UI={zh:{title:t2(DATA.title,'zh'),lA:gl('A','zh'),lB:gl('B','zh'),lC:gl('C','zh'),fAll:'全部',fit:'适配',src:'文献',empty:'点任意节点或连线，查看模型、剂量、时间点、证据等级、是否做过因果验证与解释边界。',empty2:'灰色虚框是“证据待补”的骨架节点，不连证据边。',hint:'拖动平移 · 滚轮缩放 · 点节点或连线看证据',srcTitle:'文献与方法',model:'模型',dose:'剂量/方案',time:'时间点',method:'方法',func:'功能读出',limit:'解释边界',refs:'文献',relations:'关系',node:'节点',pending:'证据待补',causal:'因果验证',assoc:'关联',abs:'仅摘要',scafNote:'这是骨架节点，用于标出研究缺口或方向矛盾的机制；当前没有足够证据连证据边，不作任何因果结论。',foot1:'证据分级：'+['A','B','C'].map(k=>`${k}=${gd(k,'zh')}`).join('；')+'。',foot2:'动画只表示方向，不代表反应速率、风险或疗效。',srcMethod:'每条边记录模型、剂量、时间点、是否做过因果验证与解释边界；每篇文献的 PMID/DOI 均经 API 解析核对。分级：'+['A','B','C'].map(k=>`${k}=${gd(k,'zh')}`).join('；')+'。均不等同人体临床因果。',links:'完整图谱与源码'},
+en:{title:t2(DATA.title,'en'),lA:gl('A','en'),lB:gl('B','en'),lC:gl('C','en'),fAll:'All',fit:'Fit',src:'Sources',empty:'Click any node or edge for model, dose, time point, evidence grade, causal test and interpretive boundary.',empty2:'Grey dashed boxes are scaffold nodes (evidence pending) and carry no evidence edges.',hint:'Drag to pan · scroll to zoom · click a node or edge',srcTitle:'Sources & methods',model:'Model',dose:'Dose / regimen',time:'Time point',method:'Method',func:'Functional readout',limit:'Interpretive boundary',refs:'References',relations:'relations',node:'Node',pending:'evidence pending',causal:'causal test',assoc:'association',abs:'abstract only',scafNote:'A scaffold node marking a research gap or a mechanism with conflicting direction; there is not yet enough evidence to draw an evidence edge, and no causal claim is made.',foot1:['A','B','C'].map(k=>`${k} = ${gd(k,'en')}`).join('; ')+'.',foot2:'Flow shows direction only, not rate, risk or efficacy.',srcMethod:'Each edge records model, dose, time point, causal test and boundary; every PMID/DOI was resolved via API. Grades: '+['A','B','C'].map(k=>`${k} = ${gd(k,'en')}`).join('; ')+'. None equals human clinical causality.',links:'Full atlases & source'}};
+const t=o=>o==null?'':typeof o==='string'?o:(o[S.lang]??o.zh??o.en??'');
+function t2(o,l){return o==null?'':typeof o==='string'?o:(o[l]??o.zh??o.en??'')}
+const GENERIC=new Set(['按v0.3逐箭头核查','audited per v0.3 edge','按原始研究读出','as reported in the original study']);
+const real=o=>{const v=t(o);return v&&!GENERIC.has(v)?v:''};
+const CW=232,RH=112,PADX=150,PADY=120,NW=192,NH=72;
+const NS='http://www.w3.org/2000/svg';
+const el=(n,a={})=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e};
+const svg=document.getElementById('svg');
+const byId=Object.fromEntries(DATA.nodes.map(n=>[n.id,n]));
+const px=n=>PADX+n.c*CW, py=n=>PADY+n.r*RH;
+const NCOL=Math.max(1,(DATA.cols||[]).length,1+Math.max(...DATA.nodes.map(n=>n.c)));
+const W=PADX*2+(NCOL-1)*CW+NW, H=PADY*2+(DATA.rows||14.4)*RH;
+window.__ATLAS_GEOM={CW,RH,PADX,PADY,NW,NH,W,H};
+const POSTER=new URLSearchParams(location.search).has('poster');
+function wrap(str,max){const cjk=/[\u3000-\u9fff]/.test(str);const units=cjk?Array.from(str):str.split(' ');const lines=[];let cur='';const w=x=>Array.from(x).reduce((a,c)=>a+(/[\u3000-\u9fff\uff00-\uffef]/.test(c)?2:1),0);for(const u of units){const nx=cur?(cjk?cur+u:cur+' '+u):u;if(w(nx)>max&&cur){lines.push(cur);cur=u}else cur=nx}if(cur)lines.push(cur);return lines}
+function clip(str,max){const l=wrap(str,max);return l.length>1?l[0]+'…':l[0]||''}
+const _cv=document.createElement('canvas').getContext('2d');
+const FONT_FAM=getComputedStyle(document.body).fontFamily;
+function tw(str,px,wt){_cv.font=`${wt} ${px}px ${FONT_FAM}`;return _cv.measureText(str).width}
+function tokens(str){return str.match(/[\u2e80-\u9fff\uff00-\uffef\u3000-\u303f【】（）]|[^\s\u2e80-\u9fff\uff00-\uffef\u3000-\u303f【】（）→\/·]+[→\/·]*\s*|[→\/·]+\s*|\s+/g)||[]}
+function glue(toks){const CL=/^[）】」』，、。：；！？,.;:!?↑↓）)\]]+\s*$/,OP=/^[（【「『(\[]$/;const out=[];for(const tk of toks){if(out.length&&(CL.test(tk)||OP.test(out[out.length-1])))out[out.length-1]+=tk;else out.push(tk)}return out}
+function fitLines(str,maxW,px,wt,maxLines){const toks=glue(tokens(str));const lines=[];let cur='';
+ for(const tk of toks){const nx=cur+tk;if(tw(nx.trimEnd(),px,wt)>maxW&&cur.trim()){lines.push(cur.trimEnd());cur=tk.trimStart();}else cur=nx;}
+ if(cur.trim())lines.push(cur.trimEnd());
+ // hard-split any single token still too wide
+ const out=[];for(const ln of lines){if(tw(ln,px,wt)<=maxW){out.push(ln);continue}let c='';for(const ch of Array.from(ln)){if(tw(c+ch,px,wt)>maxW&&c){out.push(c);c=ch}else c+=ch}if(c)out.push(c)}
+ return out}
+function fitTitle(str){for(const px of [12.5,11.8,11.2,10.6]){const l=fitLines(str,NW-40,px,650,2);if(l.length<=2)return{px,lines:l}}
+ const px=10.6;let l=fitLines(str,NW-40,px,650,9);let a=l[0],b=l.slice(1).join('');while(tw(b+'…',px,650)>NW-40&&b.length)b=b.slice(0,-1);return{px,lines:[a,b+'…']}}
+function fitSub(str){const px=9.5;if(tw(str,px,400)<=NW-24)return str;let b=str;while(b.length&&tw(b+'…',px,400)>NW-24)b=b.slice(0,-1);return b+'…'}
+
+function edgeClass(g){return g==='A'?'gA':g==='C'?'gC':'gB'}
+function edgeVisible(g){
+ if(S.filter==='all')return true;
+ return g.items.some(i=>i.grade===S.filter);
+}
+let lastBadge=null;
+const inFeed=n=>DATA.feeder&&n.r>=DATA.feeder.r0&&n.r<DATA.feeder.r1;
+function rounded(pts){const r=12;let d=`M${pts[0][0]},${pts[0][1]}`;for(let i=1;i<pts.length-1;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i],[x2,y2]=pts[i+1];const l1=Math.hypot(x1-x0,y1-y0),l2=Math.hypot(x2-x1,y2-y1);const k1=Math.min(r,l1/2)/l1,k2=Math.min(r,l2/2)/l2;d+=` L${x1-(x1-x0)*k1},${y1-(y1-y0)*k1} Q${x1},${y1} ${x1+(x2-x1)*k2},${y1+(y2-y1)*k2}`;}const e=pts[pts.length-1];return d+` L${e[0]},${e[1]}`;}
+function path(a,b){
+ lastBadge=null;
+ // orthogonal feeder routing for the v0.7 lane: run down the column gutter, along the gap above the target row, then drop in from the top
+ if(inFeed(b)&&!inFeed(a)){const gx=px(a)+NW+18,fy=py(b)-20,cx=px(b)+NW/2;lastBadge={x:cx-44,y:fy};return rounded([[px(a)+NW,py(a)+NH/2],[gx,py(a)+NH/2],[gx,fy],[cx,fy],[cx,py(b)]]);}
+ if(inFeed(a)&&!inFeed(b)){const fy=py(a)-20,cx=px(a)+NW/2,gx=px(b)-18;lastBadge={x:cx+(gx<cx?-44:44),y:fy};return rounded([[cx,py(a)],[cx,fy],[gx,fy],[gx,py(b)+NH/2],[px(b),py(b)+NH/2]]);}
+ const x1=px(a)+NW/2,y1=py(a)+NH/2,x2=px(b)-0,y2=py(b)+NH/2;
+ const sx=px(a)+NW, ex=px(b), my=(py(a)+py(b))/2+NH/2;
+ // route out the right edge, into the left edge, with smooth cubic; vertical-ish links curve sideways
+ const dx=px(b)-px(a);
+ if(dx>0){const sx=px(a)+NW,sy=py(a)+NH/2,tx=px(b),ty=py(b)+NH/2,c=Math.max(20,(tx-sx)*0.45);return`M${sx},${sy} C${sx+c},${sy} ${tx-c},${ty} ${tx},${ty}`;}
+ // same column or leftward: go through bottom/top
+ const sameSide=px(b)<=px(a);
+ const sy=py(a)+NH/2, ty=py(b)+NH/2;
+ const sxo=sameSide?px(a):px(a)+NW, exo=sameSide?px(b):px(b)+NW;
+ const off=sameSide?-70:70;
+ return`M${sxo},${sy} C${sxo+off},${sy} ${exo+off},${ty} ${exo},${ty}`;
+}
+
+function draw(){
+ svg.innerHTML='';placedBadges.length=0;
+ const defs=el('defs');
+ defs.innerHTML=`<linearGradient id="nodeFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#162744"/><stop offset="1" stop-color="#0e1a30"/></linearGradient>
+ <radialGradient id="radGlow"><stop offset="0" stop-color="#e8594a" stop-opacity=".22"/><stop offset="1" stop-color="#e8594a" stop-opacity="0"/></radialGradient><radialGradient id="glossUnused" cx="30%" cy="22%" r="80%"><stop offset="0" stop-color="#2a4066"/><stop offset="1" stop-color="#101c34"/></radialGradient>`;
+ svg.appendChild(defs);
+ const root=el('g',{id:'root'});svg.appendChild(root);
+ applyTransform(root);
+ // lanes
+ for(const L of DATA.lanes){
+  const y=PADY+L.r0*RH-28,h=(L.r1-L.r0)*RH;
+  root.appendChild(el('rect',{class:`lane lane-${L.id}`,x:40,y:y+4,width:W-80,height:h-8,rx:20,fill:tint(L.color||'#4a74c9',0.09),'data-lane':L.id}));
+  const cy=y+h/2;const lb=el('text',{class:`lane-label ll-${L.id}`,x:72,y:cy,'text-anchor':'middle',transform:`rotate(-90 72 ${cy})`,fill:L.color||'#4a74c9','data-lane-label':L.id});lb.textContent=t(L);root.appendChild(lb);
+ }
+ // version + stats line (scales with the map)
+ {const st=DATA.stats;const tx=el('text',{class:'map-stats',x:PADX-60,y:PADY-92});
+  tx.textContent=S.lang==='zh'?`${DATA.versionLabel} · 纳入研究 ${st.included} 篇（A ${st.A} · B ${st.B} · C ${st.C}）· 图中文献 ${st.sources} · 节点 ${st.nodes} · 证据关系 ${st.relations}（${st.drawn} 条连线）`:`${DATA.versionLabel} · ${st.included} included studies (A ${st.A} · B ${st.B} · C ${st.C}) · ${st.sources} sources on map · ${st.nodes} nodes · ${st.relations} relations (${st.drawn} drawn edges)`;root.appendChild(tx);}
+ // column headers
+ DATA.cols.forEach((c,i)=>{const x=PADX+i*CW+NW/2;if(i>0)root.appendChild(el('line',{class:'col-rule',x1:PADX+i*CW-18,x2:PADX+i*CW-18,y1:PADY-20,y2:PADY+(DATA.scaffoldTop||12.35)*RH-28}));const tx=el('text',{class:'col-label',x,y:PADY-30});tx.textContent=t(c);root.appendChild(tx);});
+ // edges
+ const eg=el('g');root.appendChild(eg);
+ for(const g of DATA.edges){
+  const a=byId[g.source],b=byId[g.target];if(!a||!b)continue;
+  const d=path(a,b);const vis=edgeVisible(g);
+  const grp=el('g',{class:`edge ${edgeClass(g.grade)}${vis?'':' dim'}`,'data-edge':g.key});
+  grp.appendChild(el('path',{class:'hit',d}));
+  grp.appendChild(el('path',{class:'wire',d,'marker-end':`url(#arrow-${g.grade}${g.inhibit?'-bar':''})`}));
+  if(vis){const fl=el('path',{class:'flow',d});const an=el('animate',{attributeName:'stroke-dashoffset',from:'0',to:'-180',dur:(g.grade==='C'?'3s':'2.2s'),repeatCount:'indefinite'});fl.appendChild(an);grp.appendChild(fl);}
+  // badge
+  const btxt=g.ids[0]+(g.ids.length>1?'+':'');const bw=Math.round(btxt.length*6.1+11);
+  const mid=lastBadge||badgeSpot(d,g,bw);
+  const bg=el('g',{class:'edge-badge',transform:`translate(${mid.x},${mid.y})`});
+  bg.appendChild(el('rect',{x:-bw/2,y:-10,width:bw,height:20,rx:9}));
+  const bt=el('text',{x:0,y:4,'text-anchor':'middle'});bt.textContent=btxt;bg.appendChild(bt);if(mid.clash)bg.setAttribute('data-clash','1');grp.appendChild(bg);
+  grp.addEventListener('click',e=>{e.stopPropagation();selectEdge(g.key)});
+  eg.appendChild(grp);
+ }
+ // arrow markers
+ for(const [g,col] of [['A','var(--A)'],['B','var(--B)'],['C','var(--C)']]){
+  const m=el('marker',{id:`arrow-${g}`,viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto'});
+  m.appendChild(el('path',{d:'M0 0L10 5L0 10Z',fill:col}));defs.appendChild(m);
+  const mb=el('marker',{id:`arrow-${g}-bar`,viewBox:'0 0 12 14',refX:'8',refY:'7',markerWidth:'9',markerHeight:'10',orient:'auto'});
+  mb.appendChild(el('path',{d:'M8 0V14',stroke:col,'stroke-width':'2.6'}));defs.appendChild(mb);
+ }
+ // nodes
+ const ng=el('g');root.appendChild(ng);
+ for(const n of DATA.nodes){
+  const x=px(n),y=py(n),scaf=n.status==='scaffold';
+  const g=el('g',{class:`node t${n.type} n-${laneOf(n)} ${scaf?'scaf':''}`,'data-node':n.id,transform:`translate(${x},${y})`});
+  g.appendChild(el('rect',{class:'body',x:0,y:0,width:NW,height:NH,rx:13,fill:scaf?'#f8f9fb':'#fff'}));
+  g.appendChild(el('rect',{class:'accent',x:0,y:8,width:4,height:NH-16,rx:2,fill:accent(n)}));if(!scaf){g.appendChild(el('circle',{cx:14,cy:14,r:3.2,fill:accent(n)}));}
+  const ft=fitTitle(t(n.label));const lines=ft.lines;const hasSub=!!(t(n.sub)||'').trim();const y0=scaf?(lines.length>1?24:32):hasSub?(lines.length>1?27:33):(lines.length>1?32:41);
+  lines.forEach((ln,i)=>{const tt=el('text',{class:'tt',x:NW/2+3,y:y0+i*16,style:`font-size:${ft.px}px`});tt.textContent=ln;g.appendChild(tt);});
+  if(scaf){const p=el('text',{class:'pend',x:NW/2+3,y:NH-10});p.textContent=S.lang==='zh'?'证据待补':'evidence pending';g.appendChild(p);}
+  else{const st=el('text',{class:'st',x:NW/2+3,y:lines.length>1?61:54});st.textContent=fitSub(t(n.sub)||'');g.appendChild(st);
+   const gr=gradesOf(n);if(gr){const c=el('text',{class:'grades',x:NW-9,y:13,'text-anchor':'end',fill:'#9aa7b8'});c.textContent=gr;g.appendChild(c);}}
+  if(n.id===DATA.focusNode){const halo=el('circle',{cx:NW/2,cy:NH/2,r:70,fill:'url(#radGlow)','pointer-events':'none'});g.insertBefore(halo,g.firstChild);const ring=el('circle',{cx:NW/2,cy:NH/2,r:52,fill:'none',stroke:'#e8594a',"stroke-opacity":.5,'stroke-dasharray':'3 6','pointer-events':'none'});ring.appendChild(el('animateTransform',{attributeName:'transform',type:'rotate',from:`0 ${NW/2} ${NH/2}`,to:`360 ${NW/2} ${NH/2}`,dur:'18s',repeatCount:'indefinite'}));g.insertBefore(ring,g.children[1]);}
+  g.addEventListener('click',e=>{e.stopPropagation();selectNode(n.id)});
+  ng.appendChild(g);
+ }
+ svg.setAttribute('viewBox',`0 0 ${svg.clientWidth} ${svg.clientHeight}`);
+}
+function laneOf(n){for(const L of DATA.lanes){if(n.r>=L.r0&&n.r<L.r1)return L.id}return''}
+function accent(n){if(n.status==='scaffold')return'#c3cbd6';if(n.id===DATA.focusNode)return'#e8594a';const l=laneOf(n);const L=DATA.lanes.find(x=>x.id===l);return(L&&L.color)||'#4a74c9'}
+function tint(hex,a){const h=hex.replace('#','');const n=parseInt(h.length===3?h.split('').map(c=>c+c).join(''):h,16);const r=n>>16&255,g=n>>8&255,b=n&255;const m=v=>Math.round(255-(255-v)*a);return`rgb(${m(r)},${m(g)},${m(b)})`}
+function gradesOf(n){const gs=new Set();for(const g of DATA.edges)if(g.source===n.id||g.target===n.id)g.items.forEach(i=>gs.add(i.grade));return[...gs].sort().join('')}
+const placedBadges=[];
+function boxHit(x,y,w,h,pad){for(const n of DATA.nodes){const nx=px(n),ny=py(n);if(x+w/2>nx-pad&&x-w/2<nx+NW+pad&&y+h/2>ny-pad&&y-h/2<ny+NH+pad)return true}for(const b of placedBadges){if(Math.abs(b.x-x)<(w+b.w)/2+4&&Math.abs(b.y-y)<h+4)return true}return false}
+function badgeSpot(d,g,bw){const p=el('path',{d});svg.appendChild(p);const L=p.getTotalLength();let best=null;
+ for(const f of [0.5,0.44,0.56,0.38,0.62,0.32,0.68,0.26,0.74,0.2,0.8]){const pt=p.getPointAtLength(L*f);if(!boxHit(pt.x,pt.y,bw,20,2)){best={x:pt.x,y:pt.y,w:bw};break}}
+ if(!best){const pt=p.getPointAtLength(L*0.5);best={x:pt.x,y:pt.y,w:bw,clash:true}}
+ svg.removeChild(p);placedBadges.push(best);g._badge=best;return best}
+function midpoint(d){const p=el('path',{d});svg.appendChild(p);const L=p.getTotalLength();const pt=p.getPointAtLength(L*0.5);svg.removeChild(p);return pt}
+
+function applyTransform(root){root=root||document.getElementById('root');if(root)root.setAttribute('transform',`translate(${S.tx},${S.ty}) scale(${S.k})`)}
+
+function selectNode(id){S.sel={type:'node',id};renderSel();highlight()}
+function selectEdge(key){S.sel={type:'edge',key};renderSel();highlight()}
+function highlight(){
+ const sel=S.sel;
+ document.querySelectorAll('.node').forEach(g=>{g.classList.remove('sel','dim')});
+ document.querySelectorAll('.edge').forEach(g=>{g.classList.remove('sel')});
+ if(!sel)return;
+ if(sel.type==='node'){
+  const rel=DATA.edges.filter(g=>g.source===sel.id||g.target===sel.id);
+  const keep=new Set([sel.id]);rel.forEach(g=>{keep.add(g.source);keep.add(g.target)});
+  document.querySelector(`.node[data-node="${sel.id}"]`)?.classList.add('sel');
+  document.querySelectorAll('.node').forEach(g=>{if(!keep.has(g.dataset.node))g.classList.add('dim')});
+  document.querySelectorAll('.edge').forEach(g=>{if(!rel.find(r=>r.key===g.dataset.edge))g.classList.add('dim');});
+ }else{
+  const g=DATA.edges.find(x=>x.key===sel.key);
+  document.querySelector(`.edge[data-edge="${sel.key}"]`)?.classList.add('sel');
+  document.querySelectorAll('.node').forEach(n=>{if(n.dataset.node!==g.source&&n.dataset.node!==g.target)n.classList.add('dim')});
+  document.querySelectorAll('.edge').forEach(e=>{if(e.dataset.edge!==sel.key)e.classList.add('dim')});
+ }
+}
+function refCard(id){const s=DATA.sources[id];if(!s)return`<a>${id}</a>`;const href=s.pmid?`https://pubmed.ncbi.nlm.nih.gov/${s.pmid}/`:s.doi?`https://doi.org/${s.doi}`:(s.url||'#');const tag=s.pmid?`PMID ${s.pmid}`:s.doi?`DOI ${s.doi}`:(s.journal||id);return`<a href="${href}" target="_blank" rel="noreferrer" data-ref="${id}">${tag} ↗<br><span style="color:var(--muted);font-weight:400">${t(s.title)}</span><small>${s.journal?`${s.journal} · `:''}${s.pmid&&s.doi?`DOI ${s.doi} · `:""}${t(s.reviewDepth)}${s.abstractOnly?` · <b style="color:#946200">${UI[S.lang].abs}</b>`:''}</small></a>`}
+function relBlock(it){const L=UI[S.lang];const grade=`<span class="badge g${it.grade}">${it.grade}</span>${it.causal===true?`<span class="badge causal">${L.causal}</span>`:it.causal===false?`<span class="badge assoc">${L.assoc}</span>`:''}`;
+ let doseStr=t(it.doseText)||t(it.dose&&!it.dose.regimens?it.dose:null)||'';if(it.dose&&it.dose.regimens&&it.dose.regimens.length){const eq=it.dose.regimens.filter(r=>r.eqd2!=null).map(r=>`EQD2≈${r.eqd2} Gy`);if(eq.length)doseStr+=(doseStr?' · ':'')+eq.join(' / ');}
+ if(!doseStr)doseStr='—';
+ return`<div class="rel"><div class="rel-h">${grade}<b>${it.id}</b><span>${t(it.label)}</span></div>
+ <dl>
+ <div><dt>${L.model}</dt><dd>${t(it.model)||'—'}</dd></div>
+ <div><dt>${L.dose}</dt><dd>${doseStr}</dd></div>
+ <div><dt>${L.time}</dt><dd>${t(it.time)||'—'}</dd></div>
+ ${real(it.method)?`<div><dt>${L.method}</dt><dd>${real(it.method)}</dd></div>`:''}
+ ${real(it.functional)?`<div><dt>${L.func}</dt><dd>${real(it.functional)}</dd></div>`:''}
+ </dl>
+ ${it.limitation?`<div class="limit">${t(it.limitation)}</div>`:''}
+ <div class="refs">${(it.refs||[]).map(refCard).join('')}</div></div>`;
+}
+function renderSel(){
+ const box=document.getElementById('inspector');const L=UI[S.lang];
+ if(!S.sel){box.innerHTML=`<div class="empty"><div class="stat-chip">${statsText()}</div>${L.empty}<br>${L.empty2}<br><span style="font-size:11px">${L.foot2}</span>${linksHtml()}</div>`;return}
+ if(S.sel.type==='node'){
+  const n=byId[S.sel.id];const rel=DATA.edges.filter(g=>g.source===n.id||g.target===n.id);
+  const ext=Object.entries(n.externalIds||{}).map(([k,v])=>`${k}:${v}`).join(' · ');
+  if(n.status==='scaffold'){box.innerHTML=`<div class="badges"><span class="badge scaf">${L.pending}</span></div><h2 class="sel-title">${t(n.label)}</h2><p class="sel-sub">${t(n.sub)||''}</p><div class="scaf-note">${L.scafNote}</div>`;return}
+  box.innerHTML=`<div class="badges"><span class="badge">${rel.length} ${L.relations}</span>${ext?`<span class="badge">${ext}</span>`:''}</div>
+  <h2 class="sel-title">${t(n.label)}</h2><p class="sel-sub">${t(n.sub)||''}</p>
+  ${rel.flatMap(g=>g.items).map(relBlock).join('')}`;
+ }else{
+  const g=DATA.edges.find(x=>x.key===S.sel.key);
+  box.innerHTML=`<div class="badges"><span class="badge g${g.grade}">${g.grade}${S.lang==='zh'?'级':''}</span></div>
+  <h2 class="sel-title">${t(byId[g.source].label)} ${g.inhibit?'⊣':'→'} ${t(byId[g.target].label)}</h2>
+  <p class="sel-sub">${g.items.length>1?(S.lang==='zh'?`${g.items.length} 条证据关系`:`${g.items.length} evidence relations`):''}</p>
+  ${g.items.map(relBlock).join('')}`;
+ }
+}
+function linksHtml(){const ls=DATA.links||[];if(!ls.length)return'';return`<div class="links" style="justify-content:center">${ls.map(l=>`<a href="${l.url}" target="_blank" rel="noreferrer" data-link>${t(l)} ↗</a>`).join('')}</div>`}
+function statsText(){const st=DATA.stats;return S.lang==='zh'?`${DATA.versionLabel} · 纳入 ${st.included} 篇 · A ${st.A} / B ${st.B} / C ${st.C} · 文献 ${st.sources} · 节点 ${st.nodes} · 关系 ${st.relations}`:`${DATA.versionLabel} · ${st.included} studies · A ${st.A} / B ${st.B} / C ${st.C} · ${st.sources} sources · ${st.nodes} nodes · ${st.relations} relations`}
+function applyLang(){
+ document.documentElement.lang=S.lang==='zh'?'zh-CN':'en';document.body.classList.toggle('lang-en',S.lang==='en');
+ const L=UI[S.lang];document.querySelectorAll('[data-i]').forEach(e=>{if(L[e.dataset.i]!=null)e.textContent=L[e.dataset.i]});
+ document.getElementById('fLang').textContent=S.lang==='zh'?'EN':'中文';
+ document.getElementById('hdrStats').textContent=statsText();
+ document.title=t(DATA.title)+' · '+DATA.versionLabel;
+ document.querySelector('footer').innerHTML=`<span>${statsText()}</span><span>${L.foot1}</span>`;
+ draw();renderSel();highlight();
+}
+// filters
+document.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{S.filter=b.dataset.f;document.querySelectorAll('[data-f]').forEach(x=>x.classList.toggle('on',x===b));draw();highlight();}));
+document.getElementById('fLang').addEventListener('click',()=>{S.lang=S.lang==='zh'?'en':'zh';applyLang();});
+document.getElementById('fFit').addEventListener('click',fit);
+document.getElementById('fSrc').addEventListener('click',()=>{const L=UI[S.lang];document.getElementById('srcGrid').innerHTML=`<div style="grid-column:1/-1;font-size:12px;color:var(--muted)">${statsText()} · ${t(DATA.changelog)}${linksHtml()}</div>`+Object.keys(DATA.sources).map(refCard).map(h=>`<div class="srccard">${h}</div>`).join('');document.getElementById('srcDlg').showModal();});
+document.getElementById('srcClose').addEventListener('click',()=>document.getElementById('srcDlg').close());
+svg.addEventListener('click',()=>{S.sel=null;renderSel();highlight();});
+// pan/zoom
+let drag=null,justDragged=false;
+svg.addEventListener('pointerdown',e=>{if(e.button!==0)return;drag={x:e.clientX,y:e.clientY,tx:S.tx,ty:S.ty,moving:false,id:e.pointerId};});
+svg.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+ if(!drag.moving&&Math.hypot(dx,dy)>5){drag.moving=true;svg.classList.add('grab');try{svg.setPointerCapture(drag.id)}catch(_){}}
+ if(drag.moving){S.tx=drag.tx+dx;S.ty=drag.ty+dy;applyTransform();}});
+const endDrag=()=>{if(drag&&drag.moving){justDragged=true;setTimeout(()=>justDragged=false,0);}drag=null;svg.classList.remove('grab')};
+svg.addEventListener('pointerup',endDrag);svg.addEventListener('pointercancel',endDrag);
+svg.addEventListener('click',e=>{if(justDragged){e.stopPropagation();e.preventDefault();}},true);
+svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect();const mx=e.clientX-r.left,my=e.clientY-r.top;const f=e.deltaY<0?1.12:1/1.12;const nk=Math.min(2.4,Math.max(0.3,S.k*f));S.tx=mx-(mx-S.tx)*(nk/S.k);S.ty=my-(my-S.ty)*(nk/S.k);S.k=nk;applyTransform();},{passive:false});
+function zoomBy(f){const r=svg.getBoundingClientRect();const mx=r.width/2,my=r.height/2;const nk=Math.min(2.4,Math.max(0.3,S.k*f));S.tx=mx-(mx-S.tx)*(nk/S.k);S.ty=my-(my-S.ty)*(nk/S.k);S.k=nk;applyTransform();}
+document.getElementById('zIn').addEventListener('click',()=>zoomBy(1.25));document.getElementById('zOut').addEventListener('click',()=>zoomBy(0.8));
+function initialView(){const r=svg.getBoundingClientRect();if(r.width>=860||POSTER){fit();return}const k=Math.max(0.42,r.width/W);S.k=k;S.tx=-28*k;S.ty=-(PADY-118)*k;applyTransform();}
+function fit(){const r=svg.getBoundingClientRect();const k=Math.min(r.width/W,r.height/H)*0.96;S.k=k;S.tx=(r.width-W*k)/2;S.ty=(r.height-H*k)/2;applyTransform();}
+window.addEventListener('resize',()=>{svg.setAttribute('viewBox',`0 0 ${svg.clientWidth} ${svg.clientHeight}`)});
+if(POSTER){document.body.classList.add('poster');}
+applyLang();initialView();
+</script>
+</body>
+</html>

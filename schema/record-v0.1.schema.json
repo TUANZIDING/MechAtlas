@@ -1,0 +1,139 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://github.com/TUANZIDING/MechAtlas/schema/record-v0.1.schema.json",
+ "title": "MechAtlas record v0.1",
+ "description": "One bibliographic record retrieved from a database or a manual export, normalised to a common shape (scripts/common-v0.1.py make_record).",
+ "type": "object",
+ "required": [
+  "id",
+  "source_db",
+  "title",
+  "retrieved"
+ ],
+ "properties": {
+  "id": {
+   "type": "string",
+   "description": "doi:<doi> | pmid:<pmid> | <db>:<raw id>",
+   "pattern": "^(doi:10\\.|pmid:\\d+$|[a-z0-9-]+:)"
+  },
+  "source_db": {
+   "type": "string",
+   "enum": [
+    "pubmed",
+    "europepmc",
+    "openalex",
+    "crossref",
+    "semanticscholar",
+    "biorxiv",
+    "medrxiv",
+    "wos",
+    "scopus",
+    "embase",
+    "cnki",
+    "wanfang",
+    "vip",
+    "other"
+   ]
+  },
+  "source_query": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "raw_id": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "pmid": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^\\d{1,9}$"
+  },
+  "pmcid": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "doi": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^10\\.",
+   "description": "lower-case, no https://doi.org/ prefix"
+  },
+  "title": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "abstract": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "authors": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "journal": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "year": {
+   "type": [
+    "integer",
+    "null"
+   ],
+   "minimum": 1800,
+   "maximum": 2100
+  },
+  "pub_types": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "language": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "is_preprint": {
+   "type": "boolean"
+  },
+  "url": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "retrieved": {
+   "type": "string",
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+  },
+  "hits": {
+   "type": "array",
+   "description": "after dedupe: every database hit merged into this record"
+  },
+  "source_dbs": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  }
+ }
+}

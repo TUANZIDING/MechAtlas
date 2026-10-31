@@ -1,0 +1,13 @@
+{Reference Type}: Journal Article
+{Title}: 合成样例：外泌体与放射性肌纤维化
+{Author}: 王五
+{Journal}: 合成样例组织工程杂志
+{Year}: 2022
+{Abstract}: 合成摘要二。
+{Database Provider}: 万方数据
+
+{Reference Type}: Thesis
+{Title}: 合成样例：学位论文
+{Author}: 赵六;钱七
+{Year}: 2021
+{Database Provider}: 万方数据
