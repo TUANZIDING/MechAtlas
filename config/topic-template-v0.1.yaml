@@ -129,6 +129,24 @@ atlas:
     - {id: stem, zh: "干细胞与再生", en: "Stem cells & regeneration", color: "#2a8fb0"}
     - {id: fibro, zh: "纤维化", en: "Fibrosis", color: "#b07d2a"}
 
+loop:                                # 闸门与重试（scripts/pipeline-v0.1.py）；不写则用以下默认值
+  max_outer_loops: 2                 # 外层循环上限：提取→改动审批→渲染核查→全文升级，最多 2 轮
+  retrieval:
+    max_retries: 3                   # 某库报错或 0 命中：自动重试次数
+    backoff_seconds: [60, 300, 900]  # 每次重试前等待（约 1、5、15 分钟）；--no-wait 时不阻塞，到点再跑
+    fail_on_zero_hits: true          # 一个库全部检索式合计 0 条视为失败
+  coverage:
+    max_reextract_rounds: 2          # 覆盖闸门不过：Agent 补提取最多 2 轮，之后交人工
+    min_mapped_ratio: 0.5            # 纳入研究中至少一半要进入证据边；其余须在 registry.unmapped 写科学理由
+  render:
+    max_relayout_attempts: 3         # 图谱与登记表不一致或布局冲突：自动重排最多 3 次，之后交人工
+    browser: auto                    # auto：装了 Playwright 就做真实点击核查；required：必须做；off：只做静态比对
+  fulltext:
+    enabled: true                    # 对仅摘要的纳入研究查开放获取全文（Europe PMC / Unpaywall）
+  refs:
+    max_retries: 3                   # 引用核查仅网络错误时重试
+    backoff_seconds: [60, 300, 900]
+
 report:
   language: zh                       # 中文报告，结论先行
   not_searched_note: "（写明未检索的数据库及原因，如 Scopus/Embase 未订阅）"

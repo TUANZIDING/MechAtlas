@@ -153,6 +153,13 @@ atlas:
     - {id: musc, zh: "卫星细胞与再生", en: "Satellite cells & regeneration", color: "#2a8fb0"}
     - {id: prot, zh: "蛋白稳态 · 线粒体 · 离子/膜", en: "Proteostasis · mitochondria · ion/membrane", color: "#4a74c9"}
 
+loop:                                # 闸门与重试默认值，说明见 config/topic-template-v0.1.yaml
+  max_outer_loops: 2
+  retrieval: {max_retries: 3, backoff_seconds: [60, 300, 900], fail_on_zero_hits: true}
+  coverage: {max_reextract_rounds: 2, min_mapped_ratio: 0.5}
+  render: {max_relayout_attempts: 3, browser: auto}
+  fulltext: {enabled: true}
+
 report:
   language: zh
   not_searched_note: "v0.7 只检索 PubMed；Scopus/Embase 未订阅；中文库未检索。基础检索 2023 年前约 3,700 条未逐条筛（残余缺口）。"

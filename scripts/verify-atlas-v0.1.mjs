@@ -44,11 +44,35 @@ ok('node count rendered = registry', await page.locator('.node').count() === reg
 const drawn = new Set(reg.edges.map(e => `${e.source}>${e.target}`)).size;
 ok('edge count rendered = grouped relations', await page.locator('.edge').count() === drawn, `${await page.locator('.edge').count()} / ${drawn}`);
 
+// one-to-one: every registry relation id is drawn exactly once, on a line between its own endpoints; no extras
+const dom = await page.evaluate(() => ({
+  edges: [...document.querySelectorAll('.edge')].map(g => ({ key: g.dataset.edge, ids: (g.dataset.ids || '').split(' ').filter(Boolean),
+    d: g.querySelector('path.wire')?.getAttribute('d') || '', len: g.querySelector('path.wire')?.getTotalLength() || 0 })),
+  nodes: [...document.querySelectorAll('.node')].map(n => n.dataset.node),
+}));
+const seen = new Map();
+const relFails = [];
+for (const g of dom.edges) for (const id of g.ids) {
+  seen.set(id, (seen.get(id) || 0) + 1);
+  const e = reg.edges.find(x => x.id === id);
+  if (!e) relFails.push(`${id}: not in registry`);
+  else if (g.key !== `${e.source}>${e.target}`) relFails.push(`${id}: drawn on ${g.key}, registry ${e.source}>${e.target}`);
+}
+for (const e of reg.edges) if ((seen.get(e.id) || 0) !== 1) relFails.push(`${e.id}: drawn ${seen.get(e.id) || 0}×`);
+ok(`one-to-one: all ${reg.edges.length} registry relations drawn exactly once between their own endpoints`, relFails.length === 0, relFails.join('; '));
+const badWire = dom.edges.filter(g => !(g.len > 1) || /NaN|undefined|Infinity/.test(g.d)).map(g => g.key);
+ok('every drawn line has a finite, non-empty path', badWire.length === 0, badWire.join('; '));
+const nodeIds = reg.nodes.map(n => n.id).sort().join(',');
+ok('one-to-one: rendered node ids = registry node ids', [...dom.nodes].sort().join(',') === nodeIds,
+  `${dom.nodes.length} rendered / ${reg.nodes.length} registry`);
+
 // every node: real click, inspector must show each linked source tag (evidence) or the scaffold note
 const empty = async () => page.locator('#svg').click({ position: { x: 6, y: 6 } });
 let nodeFails = [];
+page.setDefaultTimeout(8000);
 for (const n of reg.nodes) {
-  await page.locator(`.node[data-node="${n.id}"]`).click();
+  try { await page.locator(`.node[data-node="${n.id}"]`).click(); }
+  catch (e) { nodeFails.push(`${n.id}: not clickable (${String(e.message).split('\n')[0].slice(0, 80)})`); continue; }
   const txt = await page.locator('#inspector').textContent();
   if (/\[object Object\]|undefined|NaN/.test(txt)) nodeFails.push(`${n.id}: bad text in inspector`);
   if (n.status === 'scaffold') { if (!txt.includes('证据待补')) nodeFails.push(n.id); continue; }

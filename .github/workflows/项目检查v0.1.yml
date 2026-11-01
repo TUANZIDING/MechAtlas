@@ -31,6 +31,10 @@ jobs:
         run: |
           node scripts/build-atlas-v0.1.mjs --registry examples/demo/registry-demo-v0.1.json --studies examples/demo/studies-demo-v0.1.json --out docs/index.html
           git diff --exit-code docs/index.html
+      - name: 渲染一致性闸门（图谱与登记逐条对照 + 静态几何）
+        run: |
+          python3 scripts/gates-v0.1.py render --registry examples/demo/registry-demo-v0.1.json --html docs/index.html
+          python3 scripts/gates-v0.1.py geometry --registry examples/demo/registry-demo-v0.1.json
       - name: Playwright 真实点击验证（桌面 + 390 px）
         run: node scripts/verify-atlas-v0.1.mjs --html docs/index.html --registry examples/demo/registry-demo-v0.1.json --studies examples/demo/studies-demo-v0.1.json --out validation-ci.json
       - name: 引用解析（PubMed / Crossref 在线；网络故障不判失败，题名不符或查无判失败）

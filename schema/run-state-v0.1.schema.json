@@ -1,0 +1,287 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://github.com/TUANZIDING/MechAtlas/schema/run-state-v0.1.schema.json",
+ "title": "MechAtlas run state v0.1",
+ "description": "Machine-readable state of scripts/pipeline-v0.1.py: stage, outer loop, every gate result and every human approval checkpoint.",
+ "type": "object",
+ "required": [
+  "schema",
+  "topic",
+  "config",
+  "status",
+  "stage",
+  "outer_loop",
+  "settings",
+  "gates",
+  "checkpoints",
+  "events"
+ ],
+ "properties": {
+  "schema": {
+   "type": "string",
+   "enum": [
+    "mechatlas-run-state-v0.1"
+   ]
+  },
+  "topic": {
+   "type": "string"
+  },
+  "config": {
+   "type": "string"
+  },
+  "created": {
+   "type": "string"
+  },
+  "updated": {
+   "type": "string"
+  },
+  "status": {
+   "type": "string",
+   "enum": [
+    "running",
+    "done",
+    "needs_approval",
+    "needs_agent_work",
+    "waiting_retry"
+   ]
+  },
+  "stage": {
+   "type": "string",
+   "enum": [
+    "freeze",
+    "retrieval",
+    "screening",
+    "extraction",
+    "changes",
+    "render",
+    "fulltext",
+    "refs",
+    "report",
+    "release",
+    "done"
+   ]
+  },
+  "message": {
+   "type": "string"
+  },
+  "todo": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "outer_loop": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "extra_loops_granted": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "loop_exit_fp": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "settings": {
+   "type": "object",
+   "required": [
+    "max_outer_loops",
+    "retrieval",
+    "coverage",
+    "render",
+    "fulltext"
+   ],
+   "properties": {
+    "max_outer_loops": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "retrieval": {
+     "type": "object",
+     "required": [
+      "max_retries",
+      "backoff_seconds"
+     ],
+     "properties": {
+      "max_retries": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "backoff_seconds": {
+       "type": "array",
+       "items": {
+        "type": "number",
+        "minimum": 0
+       }
+      },
+      "fail_on_zero_hits": {
+       "type": "boolean"
+      }
+     }
+    },
+    "coverage": {
+     "type": "object",
+     "required": [
+      "max_reextract_rounds",
+      "min_mapped_ratio"
+     ],
+     "properties": {
+      "max_reextract_rounds": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "min_mapped_ratio": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
+     }
+    },
+    "render": {
+     "type": "object",
+     "required": [
+      "max_relayout_attempts"
+     ],
+     "properties": {
+      "max_relayout_attempts": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "browser": {
+       "type": "string",
+       "enum": [
+        "auto",
+        "required",
+        "off"
+       ]
+      }
+     }
+    },
+    "fulltext": {
+     "type": "object"
+    }
+   }
+  },
+  "gates": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "required": [
+     "status"
+    ],
+    "properties": {
+     "status": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "checkpoints": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "kind",
+     "fingerprint",
+     "status",
+     "title_zh",
+     "options",
+     "items"
+    ],
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "freeze",
+       "gate_exhausted",
+       "changes",
+       "release"
+      ],
+      "description": "(a) freeze, (b) gate_exhausted, (c) changes, (d) release"
+     },
+     "gate": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "fingerprint": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "pending",
+       "resolved",
+       "superseded"
+      ]
+     },
+     "title_zh": {
+      "type": "string"
+     },
+     "options": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "items": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "id"
+       ]
+      }
+     },
+     "resolution": {
+      "type": [
+       "object",
+       "null"
+      ],
+      "properties": {
+       "decision": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "items": {
+        "type": "object"
+       },
+       "by": {
+        "type": "string"
+       },
+       "note": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "at": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "events": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "at",
+     "stage",
+     "msg"
+    ]
+   }
+  }
+ }
+}

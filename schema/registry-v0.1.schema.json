@@ -214,6 +214,13 @@
      "externalIds": {
       "type": "object",
       "description": "e.g. {\"HGNC\":\"6018\",\"UniProt\":\"P05019\"}"
+     },
+     "mergedFrom": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "ids of nodes merged into this one; every merge needs human approval (pipeline checkpoint changes)"
      }
     }
    }
@@ -457,6 +464,71 @@
        }
       },
       "additionalProperties": true
+     }
+    }
+   }
+  },
+  "unmapped": {
+   "type": "array",
+   "description": "included studies deliberately not drawn as an edge, each with a scientific reason (coverage gate). Layout is never a reason.",
+   "items": {
+    "type": "object",
+    "required": [
+     "category",
+     "reason"
+    ],
+    "anyOf": [
+     {
+      "required": [
+       "pmid"
+      ]
+     },
+     {
+      "required": [
+       "doi"
+      ]
+     },
+     {
+      "required": [
+       "id"
+      ]
+     }
+    ],
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "pmid": {
+      "type": "string",
+      "pattern": "^\\d{1,9}$"
+     },
+     "doi": {
+      "type": "string",
+      "pattern": "^10\\."
+     },
+     "category": {
+      "type": "string",
+      "enum": [
+       "background",
+       "redundant",
+       "out-of-scope",
+       "scaffold",
+       "insufficient"
+      ]
+     },
+     "reason": {
+      "type": [
+       "object",
+       "string"
+      ]
+     },
+     "node": {
+      "type": "string",
+      "description": "scaffold node id (category scaffold)"
+     },
+     "see": {
+      "type": "string",
+      "description": "drawn source card id with the same finding (category redundant)"
      }
     }
    }

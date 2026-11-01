@@ -9,6 +9,8 @@ Example:
   python3 scripts/report-v0.1.py --topic examples/ev-intervention/topic-v0.1.yaml \
      --registry examples/demo/registry-demo-v0.1.json --studies examples/demo/studies-demo-v0.1.json \
      --verify docs/demo/verify-refs-v0.1.json --validation docs/demo/validation-v0.1.json --out docs/demo/report-demo-v0.1.md
+With --run-state the gate results and human approvals are added between
+<!-- mechatlas:gates:begin --> / <!-- mechatlas:gates:end -->; pipeline-v0.1.py keeps that block in sync.
 """
 import argparse
 import importlib.util
@@ -38,7 +40,88 @@ def ref_tag(s):
     return f"PMID {s['pmid']}" if s.get("pmid") else f"DOI {s['doi']}"
 
 
-def build(topic, reg, studies, prisma=None, verify=None, validation=None) -> str:
+GATE_BEGIN, GATE_END = "<!-- mechatlas:gates:begin -->", "<!-- mechatlas:gates:end -->"
+GSTATUS = {"pass": "通过", "pass_with_skips": "通过（有人工批准跳过的库）", "waived": "人工豁免", "escalated": "已上报人工",
+           "approved": "已批准", "done": "完成", "disabled": "未启用", "pending": "未开始", "fail": "未通过",
+           "awaiting_approval": "待审批", "reextract": "补提取中", "incomplete": "未完成", "running": "进行中"}
+KIND = {"freeze": "(a) 冻结检索策略", "gate_exhausted": "(b) 闸门重试用尽", "changes": "(c) 证据改动", "release": "(d) 发布"}
+
+
+def gates_section(st: dict) -> str:
+    """Gate results and human approvals from run-state-v0.1.json. Deterministic (no 'now'), so re-syncing a
+    report only changes it when the state really changed; the release checkpoint itself is not listed."""
+    g, s = st.get("gates", {}), st.get("settings", {})
+    gs = lambda k: GSTATUS.get((g.get(k) or {}).get("status"), (g.get(k) or {}).get("status") or "未运行")
+    cps = [c for c in st.get("checkpoints", []) if c["kind"] != "release"]
+    L = ["## 流程闸门与人工审批", "",
+         f"外层循环：共 {st.get('outer_loop', 1)} 轮（上限 {s.get('max_outer_loops', 2)} 轮"
+         + (f"，人工追加 {st['extra_loops_granted']} 轮" if st.get("extra_loops_granted") else "") + "）。"
+         "闸门结果均来自 `run-state-v0.1.json`。", "",
+         "| 闸门 | 结果 | 说明 |", "|---|---|---|"]
+    fr = g.get("freeze") or {}
+    L.append(f"| (a) 检索策略与纳排标准冻结 | {gs('freeze')} | {('批准人 ' + fr['approved_by']) if fr.get('approved_by') else ''} |")
+    r = g.get("retrieval") or {}
+    rs = s.get("retrieval", {})
+    note = [f"自动重试 {r.get('retries_used', 0)}/{rs.get('max_retries', 3)} 次（退避 {'/'.join(str(x) for x in rs.get('backoff_seconds', []))} 秒）"]
+    for db, d in sorted((r.get("decisions") or {}).items()):
+        note.append(f"{db}：人工决定 {d['decision']}（{d.get('by')}{'，' + d['note'] if d.get('note') else ''}）")
+    if r.get("failing"):
+        note.append("仍失败：" + "、".join(f"{f['db']}/{f['query_id']}" for f in r["failing"]))
+    L.append(f"| 检索（错误或 0 命中即重试） | {gs('retrieval')} | {'；'.join(note)} |")
+    dd = r.get("dedupe") or {}
+    if dd:
+        L.append(f"| 去重（自动） | 完成 | 输入 {dd.get('input_records')} 条 → 去重后 {dd.get('unique_records')} 条 |")
+    sc = g.get("screening") or {}
+    L.append(f"| 筛查完整性 | {gs('screening')} | {sc.get('rows', '—')} 行，纳入 {sc.get('included', '—')} 篇 |")
+    L.append(f"| 登记 schema 与证据契约（自动） | {gs('schema')} | |")
+    cv = g.get("coverage") or {}
+    res = cv.get("result") or {}
+    if res:
+        cat = "；".join(f"{k} {v}" for k, v in sorted((res.get("excused_by_category") or {}).items()))
+        L.append(f"| 提取覆盖 | {gs('coverage')} | 纳入 {res['included']} 篇：进入证据边 {res['mapped']} 篇（{res['mapped_ratio']:.0%}，"
+                 f"阈值 {s.get('coverage', {}).get('min_mapped_ratio', 0.5):.0%}），有记录理由未画边 {res['excused']} 篇"
+                 + (f"（{cat}）" if cat else "") + f"，无对应 {res['unaccounted']} 篇，理由无效 {res['invalid']} 篇；"
+                 f"本轮补提取 {cv.get('rounds_used', 0)}/{s.get('coverage', {}).get('max_reextract_rounds', 2)} 轮 |")
+    ch = g.get("changes") or {}
+    L.append(f"| (c) 证据改动审批 | {gs('changes')} | 已批准 {len(ch.get('approved', []))} 项，驳回 {len(ch.get('rejected', []))} 项 |")
+    rd = g.get("render") or {}
+    cnt = rd.get("counts") or {}
+    rr = cnt.get("registry") or {}
+    ra = cnt.get("atlas") or {}
+    L.append(f"| 渲染一致性（逐条比对） | {gs('render')} | "
+             + (f"登记表 节点 {rr.get('nodes')} / 关系 {rr.get('edges')} / 来源 {rr.get('sources')} = 图谱 节点 {ra.get('nodes')} / 关系 {ra.get('edges')}"
+                f"（{ra.get('drawn_lines')} 条连线）/ 来源 {ra.get('sources')}；" if cnt else "")
+             + f"构建 {len(rd.get('attempts', []))} 次，自动重排 {rd.get('relayouts_used', 0)}/{s.get('render', {}).get('max_relayout_attempts', 3)} 次；"
+               f"浏览器核查 {rd.get('browser', '—')} |")
+    ft = g.get("fulltext") or {}
+    bl = ft.get("by_loop") or {}
+    tried = sum(v.get("tried", 0) for v in bl.values())
+    got = sum(len(v.get("retrieved", [])) for v in bl.values())
+    up = sum(len(v.get("upgraded", [])) for v in bl.values())
+    capn = len(ft.get("not_attempted_cap") or [])
+    L.append(f"| 开放获取全文升级 | {gs('fulltext')} | 尝试 {tried} 篇仅摘要研究，取得全文 {got} 篇，重新提取后升级 {up} 篇"
+             + (f"；因外层循环上限未尝试 {capn} 篇" if capn else "") + " |")
+    rf = (g.get("refs") or {}).get("summary") or {}
+    L.append(f"| 引用核查（自动） | {gs('refs')} | {rf.get('checked', '—')} 条：{json.dumps(rf.get('status', {}), ensure_ascii=False)} |")
+    L += ["", "人工审批记录（Agent 不代为批准）：", ""]
+    if not cps:
+        L.append("- （无）")
+    else:
+        L += ["| 编号 | 类型 | 内容 | 决定 | 决定人 | 备注 |", "|---|---|---|---|---|---|"]
+        for c in cps:
+            rz = c.get("resolution") or {}
+            dec = rz.get("decision") or "待定"
+            if rz.get("items") and len(set(rz["items"].values())) > 1:
+                dec = "；".join(f"{k}={v}" for k, v in rz["items"].items())
+            L.append(f"| {c['id']} | {KIND.get(c['kind'], c['kind'])} | {c['title_zh']}（{len(c['items'])} 项） | {dec} | {rz.get('by', '')} | {rz.get('note') or ''} |")
+    return "\n".join(L)
+
+
+def gates_block(st: dict) -> str:
+    return f"{GATE_BEGIN}\n{gates_section(st)}\n{GATE_END}"
+
+
+def build(topic, reg, studies, prisma=None, verify=None, validation=None, run_state=None) -> str:
     srcs = {s["id"]: s for s in reg["sources"]}
     nodes = {n["id"]: n for n in reg["nodes"]}
     g = Counter(s.get("grade") for s in studies)
@@ -87,10 +170,24 @@ def build(topic, reg, studies, prisma=None, verify=None, validation=None) -> str
         L.append(f"- 文献核查（verify-refs）：{verify['summary']['checked']} 条，状态 {json.dumps(verify['summary']['status'], ensure_ascii=False)}；每个 PMID 经 NCBI esummary、DOI 经 Crossref 解析并比对题名。")
     if validation:
         L.append(f"- 图谱验证（Playwright 真实点击）：{validation['passed']}/{validation['passed'] + validation['failed']} 项通过；页面错误 {len(validation.get('pageErrors', []))} 条。")
-    L += ["", "## 6. 局限", "",
-          f"- 仅读摘要的纳入研究 {ab} 篇，相关关系只作条件性证据。",
-          "- 分级反映模型相关性与验证强度，不等同人体临床因果；C 级与骨架节点仅供提出假说。",
-          "- 订阅数据库（WoS/Scopus/Embase/CNKI）只能由用户手动导出后导入；未导入的库视为未检索。", ""]
+    unm = reg.get("unmapped") or []
+    if unm:
+        L += ["", f"纳入但未画证据边的研究（{len(unm)} 篇，均有记录理由）：", ""]
+        L += [f"- {u.get('pmid') and 'PMID ' + str(u['pmid']) or u.get('doi') or u.get('id')}【{u.get('category')}】{zh(u.get('reason'))}" for u in unm]
+    if run_state:
+        L += ["", gates_block(run_state)]
+    lim = [f"- 仅读摘要的纳入研究 {ab} 篇，相关关系只作条件性证据。",
+           "- 分级反映模型相关性与验证强度，不等同人体临床因果；C 级与骨架节点仅供提出假说。",
+           "- 订阅数据库（WoS/Scopus/Embase/CNKI）只能由用户手动导出后导入；未导入的库视为未检索。"]
+    if run_state:
+        r = (run_state.get("gates") or {}).get("retrieval") or {}
+        skipped = [f"{db}（{d.get('note') or '人工决定跳过'}）" for db, d in sorted((r.get("decisions") or {}).items()) if d["decision"] == "skip"]
+        if skipped:
+            lim.append("- 检索失败且经人工决定跳过的库：" + "、".join(skipped) + "。")
+        capn = len(((run_state.get("gates") or {}).get("fulltext") or {}).get("not_attempted_cap") or [])
+        if capn:
+            lim.append(f"- 受外层循环上限限制，{capn} 篇仅摘要研究未尝试获取开放全文。")
+    L += ["", "## 6. 局限", ""] + lim + [""]
     return "\n".join(L)
 
 
@@ -102,10 +199,12 @@ def main():
     ap.add_argument("--prisma")
     ap.add_argument("--verify")
     ap.add_argument("--validation")
+    ap.add_argument("--run-state", help="run-state-v0.1.json from pipeline-v0.1.py: adds the gate / approval summary")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     rd = lambda p: json.loads(Path(p).read_text(encoding="utf-8")) if p else None
-    text = build(C.load_topic(a.topic) if a.topic else None, rd(a.registry), rd(a.studies), rd(a.prisma), rd(a.verify), rd(a.validation))
+    text = build(C.load_topic(a.topic) if a.topic else None, rd(a.registry), rd(a.studies), rd(a.prisma), rd(a.verify), rd(a.validation),
+                 rd(a.run_state))
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(text, encoding="utf-8")
     print(json.dumps({"out": a.out, "chars": len(text)}))
