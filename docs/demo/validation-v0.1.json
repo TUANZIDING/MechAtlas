@@ -2,7 +2,7 @@
   "atlas": "demo-v0.1",
   "html": "docs/index.html",
   "date": "2026-11-01",
-  "passed": 29,
+  "passed": 32,
   "failed": 0,
   "pageErrors": [],
   "checks": [
@@ -20,6 +20,21 @@
       "name": "edge count rendered = grouped relations",
       "pass": true,
       "detail": "13 / 13"
+    },
+    {
+      "name": "one-to-one: all 13 registry relations drawn exactly once between their own endpoints",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "every drawn line has a finite, non-empty path",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "one-to-one: rendered node ids = registry node ids",
+      "pass": true,
+      "detail": "22 rendered / 22 registry"
     },
     {
       "name": "real click on all 22 nodes shows their sources / scaffold note",

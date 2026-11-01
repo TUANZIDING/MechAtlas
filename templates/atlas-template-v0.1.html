@@ -214,7 +214,7 @@ function draw(){
  for(const g of DATA.edges){
   const a=byId[g.source],b=byId[g.target];if(!a||!b)continue;
   const d=path(a,b);const vis=edgeVisible(g);
-  const grp=el('g',{class:`edge ${edgeClass(g.grade)}${vis?'':' dim'}`,'data-edge':g.key});
+  const grp=el('g',{class:`edge ${edgeClass(g.grade)}${vis?'':' dim'}`,'data-edge':g.key,'data-ids':g.ids.join(' ')});
   grp.appendChild(el('path',{class:'hit',d}));
   grp.appendChild(el('path',{class:'wire',d,'marker-end':`url(#arrow-${g.grade}${g.inhibit?'-bar':''})`}));
   if(vis){const fl=el('path',{class:'flow',d});const an=el('animate',{attributeName:'stroke-dashoffset',from:'0',to:'-180',dur:(g.grade==='C'?'3s':'2.2s'),repeatCount:'indefinite'});fl.appendChild(an);grp.appendChild(fl);}
