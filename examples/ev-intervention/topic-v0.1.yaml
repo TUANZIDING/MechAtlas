@@ -171,6 +171,13 @@ atlas:
     - {id: death, zh: "细胞死亡 · 线粒体/抗氧化", en: "Cell death · mitochondria / antioxidant", color: "#7a52c9"}
     - {id: mem, zh: "膜修复与其他机制", en: "Membrane repair & other", color: "#2f9b74"}
 
+loop:                                # 闸门与重试默认值，说明见 config/topic-template-v0.1.yaml
+  max_outer_loops: 2
+  retrieval: {max_retries: 3, backoff_seconds: [60, 300, 900], fail_on_zero_hits: true}
+  coverage: {max_reextract_rounds: 2, min_mapped_ratio: 0.5}
+  render: {max_relayout_attempts: 3, browser: auto}
+  fulltext: {enabled: true}
+
 report:
   language: zh
   not_searched_note: "Scopus、Embase 未订阅，未检索；中文数据库按要求未检索；bioRxiv/medRxiv 2024–2026 只扫描约 30%（限流）。"
