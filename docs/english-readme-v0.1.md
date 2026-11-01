@@ -16,6 +16,16 @@ Live demo: <https://tuanziding.github.io/MechAtlas/> · Chinese homepage: [READM
 8. **Verification**: every PMID/DOI resolved via API with title matching (`verify-refs-v0.1.py`); evidence contract (`validate-registry-v0.1.py`); Playwright real clicks on every node, grade filters, console errors = [], no overlaps, 390 px mobile without horizontal overflow (`verify-atlas-v0.1.mjs`).
 9. **Report**: a Chinese, conclusion-first report skeleton (`report-v0.1.py`), each claim tagged fact / association / speculation.
 
+## Gated loops and human approval (v0.2)
+
+`pipeline-v0.1.py run|status|approve` drives the stages as a resumable state machine (`run-state-v0.1.json`; exit codes 0 done, 10 needs approval, 11 needs agent work, 12 waiting to retry). Gates:
+
+- **Retrieval**: an error or 0 hits is retried with backoff (default 3 tries, ~1/5/15 min), then a human chooses skip / change query / switch source. Nothing is skipped silently.
+- **Extraction coverage**: every included study maps to ≥ 1 edge or carries a recorded reason in `unmapped[]` (layout is never a reason); up to 2 re-extraction rounds, then escalation.
+- **Render consistency**: the atlas's embedded data is compared one-to-one with the registry, plus static geometry; up to 3 re-layouts (rows only, never dropping edges or merging nodes), then escalation.
+- **Full-text upgrade**: abstract-only studies are looked up in Europe PMC and Unpaywall; retrieved texts are re-read and grade changes proposed.
+- At most 2 outer loops. Humans approve the search-strategy freeze, any exhausted gate, each grade change / edge deletion / node merge, and the final release. Approvals are bound to fingerprints of their inputs.
+
 ## Rules that never bend
 
 - Never fabricate references; every included record is a locally saved API-fetched record.

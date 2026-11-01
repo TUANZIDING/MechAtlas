@@ -19,6 +19,8 @@
 9. **订阅数据库的原始导出不得公开**（Clarivate / Elsevier / CNKI 条款）：放 `inputs/`（已 gitignore），仓库与网页只发布标识符（PMID/DOI/UT/EID）和筛查判定。
 10. Agent **不能登录机构网页订阅**（如苏州大学 WebVPN 的 Web of Science）：请用户手动导出，按 [docs/guide-wos-export-v0.1.md](docs/guide-wos-export-v0.1.md) 导入。只有用户提供 API key（环境变量）时才用 `importers/*-api-v0.1.py`。
 11. 不覆盖用户的手工判定；`screen-sheet-v0.1.py make` 刷新时保留已有判定。对外发送、投稿、公开发布需用户明确同意。
+12. **用 `scripts/pipeline-v0.1.py run` 推进课题**。它停在人工审批点（退出码 10）时，把 `pending-approval-v0.1.md` 交给用户，等用户明确决定后才运行 `approve --by <用户名>`；**Agent 绝不自行批准**，也不绕过闸门（不删边、不合并节点、不写「布局」理由来过闸）。
+13. 四个人工审批点：(a) 冻结检索策略与纳排标准；(b) 任何闸门重试用尽；(c) 每个证据等级变更、删边、节点合并（逐条）；(d) 发布前。其余（去重、引用核查、schema 检查、重排）自动运行。
 
 ## 默认分级（可在课题 YAML 的 `grades:` 中改写定义）
 
@@ -33,17 +35,20 @@
 
 ## 流程（一个课题一个运行目录 `runs/<topic>/`）
 
-| 阶段 | 命令 | 闸门 |
-|---|---|---|
-| S0 配置 | 复制 `config/topic-template-v0.1.yaml`；冒烟 `run-search-v0.1.py … --max 3` | 每条检索式有命中；已知关键文献能被检出 |
-| S1–S2 检索与去重 | `python3 scripts/run-search-v0.1.py config/<topic>-v0.1.yaml` | 检索日志无 error（或已说明） |
-| S3 筛查 | 逐条填 `screening-v0.1.csv`：`ta_decision`/`ta_reason`/`ft_decision`/`ft_reason`/`grade`/`abstract_only` | 每条排除都有理由 |
-| S4 引文追溯 | `snowball-openalex-v0.1.py`（无 OpenAlex key 用 `--backend s2`） | 一轮新增纳入 <3 篇即停 |
-| S5 提取 | `screen-sheet-v0.1.py include …` → `studies-v0.1.json` | A 级均为全文 |
-| S6 登记 | 写 `registry-v0.1.json`（schema/registry-v0.1.schema.json） | `validate-registry-v0.1.py` ok |
-| S7 构建 | `node scripts/build-atlas-v0.1.mjs …` | 构建契约通过 |
-| S8 核查 | `verify-refs-v0.1.py`、`verify-atlas-v0.1.mjs`（真实点击、控制台错误 []、无重叠、390 px 无横向溢出）、`shots-atlas-v0.1.mjs` | 全部通过；截图亲眼看过 |
-| S9 报告 | `prisma-v0.1.py`、`report-v0.1.py`，再由 Agent 改写「结论先说」 | 报告里每个数字都能在文件中找到 |
+反复运行 `python3 scripts/pipeline-v0.1.py run config/<topic>-v0.1.yaml`，按停下的原因做事（详见 [SKILL.md](SKILL.md) 第 1–2 节）。重试次数、退避、阈值都在课题 YAML 的 `loop:` 段。
+
+| 阶段 | 谁做 | 闸门 | 有界重试 → 人工 |
+|---|---|---|---|
+| S0 配置 + (a) 冻结 | Agent 写 YAML，人批准 | 批准前不检索；改配置需重新批准 | — |
+| S1–S2 检索与去重 | 自动 | 任一库报错或 0 命中即不过 | 重试 3 次（约 1/5/15 分钟）→ (b)：skip / change_query / switch_source |
+| S3 筛查 | Agent | 每条有判定、排除有理由、纳入有等级 | — |
+| S4 引文追溯 | Agent（`snowball-openalex-v0.1.py`） | 一轮新增纳入 <3 篇即停 | — |
+| S5–S6 提取与登记 | Agent 写 `registry-v0.1.json`；自动查 schema/契约/覆盖 | 每篇纳入研究进入 ≥1 条边或有 `unmapped` 科学理由；比例 ≥ 阈值 | 补提取 2 轮 → (b) |
+| (c) 改动审批 | 人逐条 | 等级变更、删边、节点合并/删除 | 驳回项由 Agent 撤回 |
+| S7 构建 + 渲染一致性 | 自动 | 图谱与登记表逐条一致，几何无冲突，真实点击全过 | 自动重排 3 次 → (b) |
+| 全文升级 | 自动取 OA 全文，Agent 重新提取 | 取到的全文都已复核 | 有升级则进入第 2 轮外层循环（上限 2 轮） |
+| S8 引用核查 | 自动 | `verify-refs` 全部 OK | 仅网络错误重试 |
+| S9 报告 + (d) 发布 | Agent 改写结论，人批准发布 | 闸门摘要自动同步；批准绑定具体文件 | — |
 
 ## 约定
 
@@ -56,7 +61,7 @@
 
 | 需要 | 读 |
 |---|---|
-| 一步步怎么做 | [docs/guide-workflow-v0.1.md](docs/guide-workflow-v0.1.md) |
+| 一步步怎么做、闸门与审批点 | [docs/guide-workflow-v0.1.md](docs/guide-workflow-v0.1.md) |
 | 各数据库能做什么、限制 | [docs/guide-databases-v0.1.md](docs/guide-databases-v0.1.md) |
 | 导入 Web of Science / CNKI 手动导出 | [docs/guide-wos-export-v0.1.md](docs/guide-wos-export-v0.1.md) |
 | 分级与骨架节点 | [docs/guide-grading-v0.1.md](docs/guide-grading-v0.1.md) |

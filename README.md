@@ -22,12 +22,12 @@
   <a href="https://github.com/TUANZIDING/MechAtlas/actions"><img src="https://github.com/TUANZIDING/MechAtlas/actions/workflows/%E9%A1%B9%E7%9B%AE%E6%A3%80%E6%9F%A5v0.1.yml/badge.svg" alt="项目检查"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-637568" alt="MIT 许可"></a>
   <a href="docs/demo/verify-refs-v0.1.json"><img src="https://img.shields.io/badge/demo%20refs-9%2F9%20resolved-2f8f94" alt="演示文献 9/9 已解析"></a>
-  <a href="docs/demo/validation-v0.1.json"><img src="https://img.shields.io/badge/atlas%20checks-29%2F29%20real%20clicks-3f6fa3" alt="图谱 29 项真实点击检查"></a>
-  <img src="https://img.shields.io/badge/tests-22%20offline-8e3b5a" alt="22 项离线测试">
+  <a href="docs/demo/validation-v0.1.json"><img src="https://img.shields.io/badge/atlas%20checks-32%2F32%20real%20clicks-3f6fa3" alt="图谱 32 项真实点击检查"></a>
+  <img src="https://img.shields.io/badge/tests-51%20offline-8e3b5a" alt="51 项离线测试">
 </p>
 
 <p align="center">
-  <code>不编造文献</code> · <code>6 个开放库 + 5 类手动导出</code> · <code>PRISMA 计数与流程图</code> · <code>由 JSON 渲染，不用图像模型</code> · <code>Playwright 真实点击</code> · <code>390 px 手机端</code>
+  <code>不编造文献</code> · <code>闸门 + 有界重试 + 人工审批</code> · <code>6 个开放库 + 5 类手动导出</code> · <code>PRISMA 计数与流程图</code> · <code>由 JSON 渲染，不用图像模型</code> · <code>Playwright 真实点击</code> · <code>390 px 手机端</code>
 </p>
 
 <p align="center">
@@ -63,6 +63,19 @@
 
 人（或 Agent）只做三件要判断的事：**筛查、分级、画机制关系**。其余——检索、分页、限流重试、去重、计数、构建、核查——都由脚本完成，并留下可复现的文件。完整步骤见 [docs/guide-workflow-v0.1.md](docs/guide-workflow-v0.1.md)，Agent 规则见 [AGENTS.md](AGENTS.md) 与 [SKILL.md](SKILL.md)。
 
+### 每一步都有闸门，关键处停下来等人
+
+一次真实课题（脊髓损伤机制图谱，纳入 137 篇）暴露过几个问题：OpenAlex 被限流返回 0 条，流程照样往下走；137 篇纳入只画出 32 条关系，剩下的去了哪里没有交代；有一条边因为"布局放不下"没画、两个节点被并在一起，核查却全部通过；66 篇仅读摘要，没人去找开放全文。
+
+所以现在整个课题由 `scripts/pipeline-v0.1.py` 推进，每个环节都有闸门，过不了就有限次自动重试，再不行就停下来交给人：
+
+- **检索**：某个库报错或 0 命中，只重跑失败的检索式，等待逐次拉长（约 1、5、15 分钟），最多 3 次；仍失败就请你选择跳过、改检索式或换数据源，报告里会写明，不会悄悄略过。
+- **提取覆盖**：每篇纳入研究要么进入至少一条证据边，要么写明不画的科学理由（"布局放不下"不算）；比例不够就让 Agent 补提取，最多 2 轮。
+- **渲染一致性**：图谱画出来后与登记表逐条核对，少一条、多一条、端点或等级不对都算失败；布局冲突就自动重排（只挪位置，不删边、不并节点），最多 3 次。
+- **全文升级**：仅读摘要的研究自动去 Europe PMC / Unpaywall 找开放全文，Agent 重读后提出改级，再走一轮复核；外层循环最多 2 轮。
+
+需要你拍板的只有四处：**(a)** 检索前冻结检索策略和纳排标准；**(b)** 任何闸门把重试用完；**(c)** 每一处等级变更、删边、节点合并（逐条列出）；**(d)** 对外发布前。流水线停下时会写一份 `pending-approval-v0.1.md`，说明要决定什么、怎么记录；你决定后它从停下的地方接着走。去重、引用核查、schema 检查等其余环节全自动。每个闸门的结果都记在机器可读的 `run-state-v0.1.json` 里，并汇总进中文报告。重试次数、等待时间、阈值都在课题 YAML 的 `loop:` 段里改。
+
 <a id="showcase"></a>
 
 ## 图谱一览 · Showcase
@@ -92,18 +105,19 @@ git clone https://github.com/TUANZIDING/MechAtlas.git && cd MechAtlas
 pip install -r requirements.txt                  # 只需 PyYAML；HTTP 用标准库
 export MECHATLAS_EMAIL=you@example.org           # API 礼貌访问；可选 NCBI_API_KEY / OPENALEX_API_KEY / S2_API_KEY
 
-python3 tests/run-tests-v0.1.py                  # 22 项离线测试
+python3 tests/run-tests-v0.1.py                  # 51 项离线测试
 python3 scripts/run-search-v0.1.py examples/radiation-muscle/topic-v0.1.yaml --max 3 --only pubmed,europepmc   # 冒烟
 
 # 你的课题
-cp config/topic-template-v0.1.yaml config/my-topic-v0.1.yaml       # 填 PICO、检索式、泳道、分级
-python3 scripts/run-search-v0.1.py config/my-topic-v0.1.yaml       # → runs/my-topic/：raw、去重、筛查表
-python3 scripts/import-export-v0.1.py --format wos --db wos inputs/my-topic/wos/*.txt --out runs/my-topic/raw/wos-wos1.jsonl
+cp config/topic-template-v0.1.yaml config/my-topic-v0.1.yaml       # 填 PICO、检索式、泳道、分级、loop 重试参数
+python3 scripts/pipeline-v0.1.py run config/my-topic-v0.1.yaml     # 反复运行；停下时看 runs/my-topic/pending-approval-v0.1.md
+python3 scripts/pipeline-v0.1.py approve runs/my-topic --checkpoint freeze-1 --decision approve --by 你的名字
+python3 scripts/pipeline-v0.1.py status runs/my-topic
 
 # 图谱（Node 22 + Playwright）
 npm install --no-save playwright && npx playwright install chromium
 node scripts/build-atlas-v0.1.mjs --registry examples/demo/registry-demo-v0.1.json --studies examples/demo/studies-demo-v0.1.json --out docs/index.html
-node scripts/verify-atlas-v0.1.mjs                # 29 项真实点击检查
+node scripts/verify-atlas-v0.1.mjs                # 32 项真实点击检查（含逐条一致性）
 python3 scripts/verify-refs-v0.1.py examples/demo/registry-demo-v0.1.json   # 在线解析每个 PMID/DOI
 ```
 
@@ -124,17 +138,20 @@ MechAtlas/
 ├── scripts/
 │   ├── search-{pubmed,europepmc,openalex,crossref,semanticscholar,biorxiv}-v0.1.py
 │   ├── snowball-openalex-v0.1.py        # 引文追溯（OpenAlex 或 --backend s2）
+│   ├── pipeline-v0.1.py                 # 闸门流水线：有界重试、外层循环、人工审批点、run-state
+│   ├── gates-v0.1.py · relayout-v0.1.py # 检索/覆盖/渲染一致性/几何闸门；自动重排（只挪位置）
+│   ├── fulltext-oa-v0.1.py              # 仅摘要研究的开放全文升级（Europe PMC / Unpaywall）
 │   ├── run-search-v0.1.py               # 按 YAML 一键检索 + 导入 + 去重 + 筛查表
 │   ├── import-export-v0.1.py            # 手动导出 → 统一记录
 │   ├── dedupe · screen-sheet · prisma · verify-refs · validate-registry · report  (-v0.1.py)
 │   ├── build-atlas · verify-atlas · shots-atlas  (-v0.1.mjs)
 │   └── common-v0.1.py · check-repo-v0.1.py · draw-pipeline-v0.1.py
 ├── importers/                           # WoS 纯文本/制表符 · Scopus CSV · RIS(Scopus/Embase) · CNKI/万方 · 可选 API
-├── schema/                              # record / study / registry 的 JSON Schema
+├── schema/                              # record / study / registry / run-state 的 JSON Schema
 ├── templates/atlas-template-v0.1.html   # 通用浅色交互图谱模板
 ├── prompts/codex-prompt-v0.1.md         # 可直接粘贴的 Codex 提示词（含联网设置）
 ├── docs/                                # GitHub Pages：index.html 演示页 + 中文指南 + 截图 + 核查结果
-└── tests/                               # 22 项离线测试 + 合成导出样例（非真实数据）
+└── tests/                               # 51 项离线测试 + 合成导出样例（非真实数据）
 ```
 
 <a id="evidence"></a>
@@ -145,6 +162,8 @@ MechAtlas/
 | --- | --- |
 | 不编造文献 | 纳入记录只能来自本地保存的 API 记录；`verify-refs` 用 PubMed esummary / Crossref / doi.org 解析每个 PMID/DOI 并比对题名 |
 | 每条边都有来源 | 构建脚本与 `validate-registry` 强制：边 → 来源卡 → 纳入研究，缺一即失败 |
+| 纳入了就要有交代 | 覆盖闸门：每篇纳入研究进入证据边，或在 `unmapped` 写科学理由；布局不是理由 |
+| 画出来的就是登记的 | 渲染一致性闸门：图谱与登记表逐条比对，删边、并节点、改等级都要人工逐条批准 |
 | 读到多深要说清 | `abstract_only` 标"仅摘要"，最高 B 级；A 级必须读全文 |
 | 事实 / 关联 / 推测分开 | 边上 `causal` 只表示做过因果检验；报告每条结论标【事实】【关联】【推测】 |
 | 矛盾与假说不画箭头 | 骨架节点（灰色虚框）不连证据边 |
@@ -162,9 +181,11 @@ MechAtlas/
 | 已验证 · 在线 | PubMed、Europe PMC（含预印本）、Semantic Scholar、Crossref、bioRxiv 检索脚本；一键运行器；引文追溯（S2 后端）；引用核查 | 2026-11-01 用小样本在线跑通；Semantic Scholar 匿名池常限流，脚本退避重试 |
 | 已实现 · 受限 | OpenAlex 检索与引文追溯 | 2026 起匿名访问按 IP 计日预算，测试当天共享 IP 预算已用完（HTTP 429）；**请设 `OPENALEX_API_KEY`** |
 | 已验证 · 离线 | WoS（纯文本、UTF-16 制表符）、Scopus CSV/RIS、Embase RIS、CNKI/万方 RefWorks/EndNote/NoteExpress 导入；去重；PRISMA；筛查表；schema 与证据契约 | 用合成样例测试，未用真实导出回归 |
-| 已验证 · 浏览器 | 图谱构建、29 项真实点击验证、截图 | 布局坐标需人工安排；自动排版不在 v0.1 |
+| 已验证 · 浏览器 | 图谱构建、32 项真实点击验证（含逐条一致性）、截图 | 初始布局坐标仍需人工安排；冲突时自动重排只挪行号 |
+| 已验证 · 离线 | 闸门流水线：检索重试与退避、覆盖闸门、渲染一致性、自动重排、改动比对、四个人工审批点、run-state | 用合成数据与注入的检索/构建/全文接口测试；真实课题上待更多回归 |
+| 已实现 · 未在线回归 | 开放全文升级（Europe PMC fullTextXML、Unpaywall） | 只取开放获取全文；出版社 PDF 可能拒绝下载，此时只记录链接 |
 | 未测试 | WoS Starter API、Elsevier Scopus API 适配器 | 需用户自备 key |
-| 不包含 | 自动筛查判定、全文 PDF、机构订阅库的自动检索 | 判定由人/Agent 完成并写理由；订阅库只能手动导出 |
+| 不包含 | 自动筛查判定、订阅全文、机构订阅库的自动检索、代替人批准 | 判定由人/Agent 完成并写理由；订阅库只能手动导出；审批只能由人记录 |
 
 ## 参与共创 · Contribute
 
