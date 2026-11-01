@@ -40,7 +40,7 @@
 | 阶段 | 谁做 | 闸门 | 有界重试 → 人工 |
 |---|---|---|---|
 | S0 配置 + (a) 冻结 | Agent 写 YAML，人批准 | 批准前不检索；改配置需重新批准 | — |
-| S1–S2 检索与去重 | 自动 | 任一库报错或 0 命中即不过 | 重试 3 次（约 1/5/15 分钟）→ (b)：skip / change_query / switch_source |
+| S1–S2 检索与去重 | 自动 | 任一库报错或 0 命中即不过 | 报错重试 3 次（约 1/5/15 分钟）；0 命中不重试 → (b)：skip / change_query / switch_source |
 | S3 筛查 | Agent | 每条有判定、排除有理由、纳入有等级 | — |
 | S4 引文追溯 | Agent（`snowball-openalex-v0.1.py`） | 一轮新增纳入 <3 篇即停 | — |
 | S5–S6 提取与登记 | Agent 写 `registry-v0.1.json`；自动查 schema/契约/覆盖 | 每篇纳入研究进入 ≥1 条边或有 `unmapped` 科学理由；比例 ≥ 阈值 | 补提取 2 轮 → (b) |

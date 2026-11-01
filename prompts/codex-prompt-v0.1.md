@@ -35,7 +35,7 @@ MechAtlas 要访问 PubMed、Europe PMC 等 API，**Codex 默认不联网**：
 
 请用流水线推进：反复运行 python3 scripts/pipeline-v0.1.py run config/<topic>-v0.1.yaml --run-dir runs/<topic>，按它的退出码行事——0 完成；10 停下来把 runs/<topic>/pending-approval-v0.1.md 原样转给我，等我批准（你绝不能自己运行 approve）；11 按提示补完你的活再重跑；12 在等检索重试，稍后再跑。以下各步都在流水线的闸门之内，产出写进 runs/<topic>/，不要跳步：
 1. 复制 config/topic-template-v0.1.yaml 为 config/<topic>-v0.1.yaml，填 PICO、纳入/排除、各库检索式（基础检索 + 每条通路一个模块检索 + 近年全量 + 补充检索）、泳道、分级定义。先用 --max 3 冒烟，报告每条检索式命中数。
-2. 检索策略和纳排标准冻结前，流水线会停下来请我批准。之后它跑全量检索 + 导入我的手动导出；某个库报错或 0 命中会自动退避重试，用尽后停下来请我决定跳过、改检索式还是换数据源，不要自己跳过。确认已知关键文献都在去重集里。
+2. 检索策略和纳排标准冻结前，流水线会停下来请我批准。之后它跑全量检索 + 导入我的手动导出；某个库报错会自动退避重试，用尽后停下来请我决定跳过、改检索式还是换数据源；请求成功但 0 命中则直接停下来请我确认，不要自己跳过。确认已知关键文献都在去重集里。
 3. 在 screening-v0.1.csv 逐条做题名/摘要筛查，每条排除写理由；对通过者取全文（Europe PMC fullTextXML / PMC OA），做全文筛查；拿不到全文的标 abstract_only=yes（最高 B 级）。A 级必须读全文。
 4. 用 snowball-openalex-v0.1.py 对纳入集做引文追溯（没有 OPENALEX_API_KEY 就加 --backend s2），新候选并入筛查，直到一轮新增纳入 < 3 篇。
 5. 导出 studies-v0.1.json；按 schema/registry-v0.1.schema.json 写 registry-v0.1.json：节点放在泳道和因果列里，每条边写 direction / grade / causal / refs / model / dose / time / method / functional / limitation。没画成边的纳入研究写进 unmapped[]，给出类别（background / redundant / out-of-scope / scaffold / insufficient）和理由；「布局放不下」不是理由。删边、并节点、改分级都会逐项列给我批准。

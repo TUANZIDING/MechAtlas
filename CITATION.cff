@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "如果使用 MechAtlas，请按以下信息引用。If you use MechAtlas, please cite it as below."
 title: "MechAtlas: an agent skill and toolkit for verified mechanism and signalling-pathway atlases"
-version: 0.2.0
+version: 0.2.1
 date-released: 2026-11-01
 license: MIT
 repository-code: "https://github.com/TUANZIDING/MechAtlas"

@@ -1,6 +1,6 @@
 {
   "name": "mechatlas",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "MechAtlas: build and verify single-file interactive pathway atlases from a registry JSON",
   "type": "module",

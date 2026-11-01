@@ -20,7 +20,7 @@ Live demo: <https://tuanziding.github.io/MechAtlas/> · Chinese homepage: [READM
 
 `pipeline-v0.1.py run|status|approve` drives the stages as a resumable state machine (`run-state-v0.1.json`; exit codes 0 done, 10 needs approval, 11 needs agent work, 12 waiting to retry). Gates:
 
-- **Retrieval**: an error or 0 hits is retried with backoff (default 3 tries, ~1/5/15 min), then a human chooses skip / change query / switch source. Nothing is skipped silently.
+- **Retrieval**: an error is retried with backoff (default 3 tries, ~1/5/15 min), then a human chooses skip / change query / switch source. A successful search with 0 hits is not retried; it goes straight to a human (it may be a real evidence gap). Nothing is skipped silently.
 - **Extraction coverage**: every included study maps to ≥ 1 edge or carries a recorded reason in `unmapped[]` (layout is never a reason); up to 2 re-extraction rounds, then escalation.
 - **Render consistency**: the atlas's embedded data is compared one-to-one with the registry, plus static geometry; up to 3 re-layouts (rows only, never dropping edges or merging nodes), then escalation.
 - **Full-text upgrade**: abstract-only studies are looked up in Europe PMC and Unpaywall; retrieved texts are re-read and grade changes proposed.

@@ -261,9 +261,10 @@ class TestFulltext(unittest.TestCase):
 class Harness:
     """A run directory with a JSON topic config and injected side effects."""
 
-    def __init__(self, d, fail_dbs=(), backoff=(60, 300, 900), browser="off", oa=("32754983",)):
+    def __init__(self, d, fail_dbs=(), backoff=(60, 300, 900), browser="off", oa=("32754983",), zero_dbs=()):
         self.d = Path(d)
         self.fail_dbs = set(fail_dbs)
+        self.zero_dbs = set(zero_dbs)
         self.sleeps = []
         self.t = 1_000_000.0
         self.drop = set()
@@ -290,6 +291,8 @@ class Harness:
     def runner(self, db, q, cap, email):
         if db in self.fail_dbs:
             raise C.HttpError(429, "https://api.openalex.org/works", "rate limited")
+        if db in self.zero_dbs:
+            return 0, []
         recs = [C.make_record(db, pmid=s["pmid"], doi=s["doi"], title=s["title"], year=s["year"], source_query="q1") for s in ST]
         recs.append(C.make_record(db, pmid="99999991", doi="10.99999/synthetic.x", title="Synthetic unrelated record", year=2020))
         return len(recs), recs
@@ -361,6 +364,21 @@ class TestPipelineRetrieval(unittest.TestCase):
             self.assertEqual((st["status"], st["stage"]), ("needs_agent_work", "screening"))
             self.assertEqual(len(h.sleeps), 3, "no further retries after the decision")
             self.assertIn("openalex", RP.gates_section(st))
+
+    def test_zero_hits_escalate_without_backoff(self):
+        with tempfile.TemporaryDirectory() as d:
+            h = Harness(d, zero_dbs={"openalex"})
+            h.go()
+            h.ok("freeze-1", decision="approve")
+            st = h.go()
+            self.assertEqual(h.sleeps, [], "a successful 0-hit search is a result, not retried with backoff")
+            r = st["gates"]["retrieval"]
+            self.assertEqual((r["status"], r["retries_used"]), ("escalated", 0))
+            self.assertEqual(h.pending(st), ["gate-retrieval-1"])
+            self.assertIn("未重试", st["checkpoints"][-1]["items"][0]["zh"])
+            h.ok("gate-retrieval-1", item=["openalex=skip"], note="确认为零")
+            st = h.go()
+            self.assertEqual(st["gates"]["retrieval"]["status"], "pass_with_skips")
 
     def test_change_query_requires_new_freeze(self):
         with tempfile.TemporaryDirectory() as d:

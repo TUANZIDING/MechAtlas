@@ -336,7 +336,9 @@ def stage_retrieval(ctx) -> None:
             g["dedupe"] = stats
             event(st, "retrieval", f"retrieval gate {g['status']}", skipped=sorted(excused))
             return
-        retry = [f for f in fails if not f["manual"]]
+        # Only errors (HTTP 429/5xx, timeouts) are worth a backoff retry. A request that succeeded with 0 records is a
+        # result, not a fault (often a real evidence gap): it goes straight to a human, with no waiting.
+        retry = [f for f in fails if not f["manual"] and f["reason"] != "zero_hits"]
         if retry and g["retries_used"] < int(s["max_retries"]):
             _save(ctx)
             _wait(st, g, s["backoff_seconds"], hooks, ctx["no_wait"], "retrieval")
@@ -353,10 +355,11 @@ def stage_retrieval(ctx) -> None:
         cfp = G.fingerprint({"freeze": fp, "fails": sorted(f"{f['db']}/{f['query_id']}:{f['reason']}" for f in fails)})
         items = [{"id": db, "zh": f"{db}：" + "；".join(f"{f['query_id']} {('0 条命中' if f['reason'] == 'zero_hits' else '错误 ' + str(f['detail'])[:120])}"
                                                       for f in fails if f["db"] == db)
-                  + (f"（已自动重试 {g['retries_used']} 次）" if any(not f["manual"] for f in fails if f["db"] == db) else "（手动导出，重试无意义）")}
+                  + _retry_note(fails, db, g["retries_used"])}
                  for db in dbs]
         cp = open_cp(st, "gate_exhausted", cfp, "检索闸门：重试用尽，需决定如何处理失败的数据库", items, "retrieval",
-                     why="可选：skip（跳过该库，报告中写明）、change_query（改检索式）、switch_source（换数据源）。不会静默跳过。")
+                     why="可选：skip（跳过该库，报告中写明；若确认是真实的 0 条/证据空白，也选 skip 并在 --note 写明「确认为零」）、"
+                         "change_query（改检索式）、switch_source（换数据源）。不会静默跳过。")
         if cp["status"] == "pending":
             g["status"] = "escalated"
             raise Stop("needs_approval", f"检索闸门重试用尽：{', '.join(dbs)}（checkpoint b）")
@@ -370,6 +373,15 @@ def stage_retrieval(ctx) -> None:
         if todo:
             g["status"] = "awaiting_config_change"
             raise Stop("needs_agent_work", "按人工决定修改检索配置", todo)
+
+
+def _retry_note(fails, db, retries_used):
+    mine = [f for f in fails if f["db"] == db]
+    if all(f["reason"] == "zero_hits" for f in mine):
+        return "（请求成功但合计 0 条，未重试：可能是真实的证据空白，也可能检索式过窄）"
+    if any(not f["manual"] for f in mine):
+        return f"（已自动重试 {retries_used} 次）"
+    return "（手动导出，重试无意义）"
 
 
 def _fail_ids(log, s, g):
